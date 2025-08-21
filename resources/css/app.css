@@ -1,0 +1,1094 @@
+@import "@tabler/core/dist/css/tabler.min.css"; /* Pindahkan @import Tabler ke bagian atas */
+
+tr.bg-super-admin {
+    background-color: #ff4066;
+}
+
+.dark tr.bg-super-admin {
+    color: #000 !important;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed !important;
+}
+
+.navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    position: relative;
+  }
+/* Warna utama untuk sidebar */
+.navbar-vertical {
+    background-color: #223958; /* Biru kehijauan gelap yang profesional */
+    color: white;
+
+}
+
+/* Menyesuaikan warna teks link di sidebar */
+.navbar-vertical .nav-link {
+    color: white;
+}
+
+/* Warna link ketika hover */
+.navbar-vertical .nav-link:hover {
+    background-color: rgba(29, 53, 87, 0.8); /* Efek hover dengan sedikit gradasi */
+    color: white;
+}
+
+/* Warna aktif link di sidebar */
+.navbar-vertical .nav-item.active .nav-link {
+    background-color: #457b9d; /* Biru lebih terang untuk item aktif */
+    color: white;
+}
+
+/* Warna dropdown */
+.navbar-vertical .dropdown-menu {
+    background-color: #1d3557; /* Menyesuaikan dropdown dengan warna utama */
+    color: white;
+}
+
+.navbar-vertical .dropdown-menu .dropdown-item {
+    color: white;
+}
+
+.navbar-vertical .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(29, 53, 87, 0.8); /* Hover efek untuk dropdown */
+    color: white;
+}
+
+
+
+ /* Menambahkan box-sizing agar padding dan margin dihitung dengan benar */
+ * {
+    box-sizing: border-box;
+}
+
+/* Wrapper untuk seluruh layout */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row;
+    position: relative; /* Pastikan konten wrapper tidak menghalangi navbar */
+
+}
+
+
+/* Konten utama */
+.page-wrapper {
+    margin-left: 0;
+    flex-grow: 1;
+    padding: 5px;
+    transition: margin-left 0.3s ease;
+
+}
+
+/* Jika sidebar ada di desktop */
+@media (min-width: 768px) {
+    .page-wrapper {
+        margin-left: 250px; /* Memberikan ruang untuk sidebar */
+    }
+}
+
+/* Responsif untuk sidebar di perangkat kecil */
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: none; /* Menyembunyikan sidebar pada layar kecil */
+    }
+
+    .page-wrapper {
+        margin-left: 0;
+    }
+
+    .sidebar-toggle {
+        display: block; /* Menampilkan tombol toggle untuk sidebar */
+    }
+}
+
+
+/* Untuk menu dropdown pastikan pop-up berada di atas */
+.swal2-popup-custom {
+    border-radius: 10px;
+    z-index: 1060; /* Pastikan popup berada di atas semua elemen */
+}
+
+
+/* styling top-nav */
+.top-nav {
+    border-radius: 10px; /* Tetap mempertahankan sudut rounded */
+    /* overflow: hidden; --> HAPUS baris ini! */
+    position: relative; /* Tambahkan supaya dropdown tetap bisa menggunakan z-index dengan benar */
+
+}
+
+/* Umum untuk nav-link */
+.top-nav .nav-link {
+    transition: color 0.3s, background-color 0.3s;
+}
+
+/* Mode Light */
+[data-bs-theme="light"] .top-nav .nav-link {
+    color: #1d3557; /* Biru gelap untuk teks di light mode */
+}
+
+[data-bs-theme="light"] .top-nav .nav-link:hover,
+[data-bs-theme="light"] .top-nav .nav-link:focus {
+    background-color: rgba(29, 53, 87, 0.1); /* Biru muda transparan */
+    color: #003049; /* Biru tua saat hover di light mode */
+}
+
+[data-bs-theme="light"] .top-nav .nav-link.active {
+    background-color: #a8dadc; /* Biru pastel untuk active link */
+    color: #1d3557; /* Tetap biru gelap */
+    border-radius: 6px;
+}
+
+/* Mode Dark */
+[data-bs-theme="dark"] .top-nav .nav-link {
+    color: #fff; /* Putih di dark mode */
+}
+
+[data-bs-theme="dark"] .top-nav .nav-link:hover,
+[data-bs-theme="dark"] .top-nav .nav-link:focus {
+    background-color: rgba(255, 255, 255, 0.1); /* Putih transparan */
+    color: #ffd700; /* Kuning emas saat hover di dark mode */
+}
+
+[data-bs-theme="dark"] .top-nav .nav-link.active {
+    background-color: #457b9d; /* Biru terang untuk active link */
+    color: #fff; /* Putih untuk teks active */
+    border-radius: 6px;
+}
+
+
+.modal {
+    z-index: 1050;
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+
+
+
+
+/* Off Canvas menu mobile */
+
+
+/* Hover effect pada item menu yang lebih soft */
+.navbar-nav .nav-item .nav-link {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Warna soft untuk hover */
+.navbar-nav .nav-item .nav-link:hover {
+    background-color: rgba(6, 111, 209, 0.1); /* Soft background */
+    color: #066fd1; /* Warna teks tetap kontras */
+    border-radius: 5px;
+}
+
+/* Offcanvas Slide-in animation */
+.offcanvas {
+    transition: transform 0.3s ease-in-out; /* Transisi untuk masuk dan keluar */
+}
+
+.offcanvas-start {
+    transform: translateX(-100%); /* Awalnya offcanvas berada di luar layar */
+}
+
+.offcanvas-end {
+    transform: translateX(100%); /* Offcanvas keluar ke kanan */
+}
+
+/* Ketika offcanvas dibuka */
+.offcanvas.show {
+    transform: translateX(0); /* Muncul ke layar */
+}
+
+/* Animasi pada tombol toggler */
+.navbar-toggler.collapsed {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+.navbar-toggler:not(.collapsed) {
+    transform: rotate(90deg);
+}
+
+/* Offcanvas layout adjustment */
+.offcanvas {
+    width: 250px; /* Lebar offcanvas yang optimal */
+    padding: 15px 20px; /* Padding yang lebih nyaman */
+}
+
+/* Header dan body yang lebih rapi */
+.offcanvas-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.offcanvas-body {
+    padding: 0;
+    margin-top: 10px;
+}
+
+.offcanvas-body .nav-item {
+    margin-bottom: 10px;
+}
+
+.offcanvas-body .nav-link {
+    padding: 12px 20px;
+}
+
+/* Rotasi icon navbar-toggler dengan efek */
+.navbar-toggler {
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-toggler-icon {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Animasi rotasi ketika toggler ditekan */
+.navbar-toggler.collapsed .navbar-toggler-icon {
+    transform: rotate(0deg);
+}
+
+.navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+    transform: rotate(90deg);
+}
+
+
+/* sidebar */
+/* Setel lebar sidebar saat expand */
+#menu-nav {
+    transition: width 0.3s ease;
+    width: 250px; /* Lebar sidebar saat expand */
+}
+
+/* Setel lebar sidebar saat collapse */
+#menu-nav.collapsed {
+    width: 60px; /* Lebar sidebar saat collapse */
+}
+
+#menu-nav .navbar-brand {
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+}
+
+#menu-nav.collapsed .navbar-brand {
+    opacity: 0; /* Menyembunyikan brand saat sidebar collapse */
+}
+
+/* Menyesuaikan ikon untuk tampilan collapse */
+#menu-nav.collapsed #toggleIcon {
+    transform: rotate(180deg); /* Putar ikon saat collapse */
+}
+
+
+/* Sidebar saat hover, z-index lebih tinggi */
+#menu-nav:hover {
+    z-index: 1080; /* Sidebar berada di atas komponen lainnya saat hover */
+}
+
+/* Sidebar tetap berada di atas konten saat hover */
+#menu-nav.collapsed:hover {
+    width: 250px; /* Lebar sidebar saat hover */
+}
+
+/* Atur top-nav agar selalu berada di atas sidebar */
+.top-nav {
+    position: relative;
+
+}
+
+/* Atur agar navbar-brand terlihat saat hover */
+#menu-nav.collapsed:hover .navbar-brand {
+    opacity: 1;
+}
+
+
+
+
+.sidebar.collapsed {
+    width: 80px; /* Lebar sidebar ketika collapse */
+}
+
+/* Page Wrapper yang berfungsi untuk menata layout */
+.page-wrapper {
+    display: flex;
+    flex: 1;
+    transition: margin-left 0.3s ease, width 0.3s ease, margin-right 0.3s ease; /* Menambahkan transisi untuk margin dan lebar */
+    margin-left: 250px; /* Margin kiri untuk memberi ruang pada sidebar */
+    margin-right: 20px; /* Menambahkan margin kanan agar konten tidak terlalu mepet */
+    width: calc(100% - 250px); /* Konten utama mengambil ruang sisa */
+}
+
+.page-wrapper.collapsed {
+    margin-left: 80px; /* Mengurangi margin kiri ketika sidebar collapse */
+    width: calc(100% - 80px); /* Mengurangi lebar konten utama sesuai lebar sidebar */
+}
+
+/* Responsif untuk tampilan layar kecil */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Sidebar mengambil seluruh lebar layar */
+        position: absolute; /* Menjaga sidebar di posisi absolute pada layar kecil */
+    }
+
+    .sidebar.collapsed {
+        width: 100%; /* Sidebar tetap mengambil seluruh lebar layar */
+    }
+
+    .page-wrapper {
+        margin-left: 0; /* Tidak ada margin kiri pada perangkat kecil */
+        margin-right: 20px; /* Menambahkan margin kanan pada perangkat kecil */
+        width: 100%; /* Konten utama memenuhi lebar layar */
+    }
+}
+
+
+
+
+/* Toggle Sidebar */
+.toggle-icon {
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1); /* Easing lebih smooth */
+    transform-origin: center; /* Mutar di tengah */
+}
+
+.toggle-icon.rotated {
+    transform: rotate(180deg) scale(1.05); /* Tambahkan efek zoom sedikit */
+}
+
+.toggle-icon {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    transform-origin: center;
+}
+#toggleSidebar {
+    display: block; /* Tampil default */
+}
+
+@media (max-width: 768px) {
+    #toggleSidebar {
+        display: none; /* Sembunyikan di layar kecil */
+    }
+}
+
+#menu-nav {
+    transition: all 0.3s ease;
+}
+
+.page-wrapper {
+    transition: margin-left 0.3s ease;
+}
+
+
+.toggle-icon {
+    color: #666; /* Warna default icon */
+    transition: color 0.3s ease, transform 0.3s ease; /* animasi perubahan warna dan rotasi */
+}
+
+.toggle-icon:hover {
+    color: #1e88e5; /* Warna biru saat hover */
+    transform: scale(1.2); /* Membesarkan dikit saat hover */
+}
+
+.dropdown-item.active {
+    background-color: #dbeafe; /* biru muda */
+    color: #1e40af; /* biru navy */
+    font-weight: 600;
+}
+
+
+#rombel-tabler .table td,
+#rombel-tabler .table th {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    /* atau shorthand: padding: 12px 8px; */
+}
+
+
+.litepicker {
+    z-index: 1056 !important; /* lebih tinggi dari modal Bootstrap (1055) */
+  }
+
+
+/* Light theme */
+html[data-bs-theme="light"] .tooltip .tooltip-arrow::before {
+    border-top-color: #000 !important;
+}
+
+/* Dark theme */
+html[data-bs-theme="dark"] .tooltip .tooltip-arrow::before {
+    border-top-color: #fff !important;
+}
+
+
+/* Light theme */
+html[data-bs-theme="light"] .tooltip-inner {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* Dark theme */
+html[data-bs-theme="dark"] .tooltip-inner {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+/* Menjamin body dan page-wrapper memiliki tinggi penuh */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex-grow: 1; /* Konten akan mengisi sisa ruang vertikal */
+}
+
+
+.avatar-preview-container {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-preview-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    opacity: 0;
+    width: 200px;
+    height: 200px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    padding: 8px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.avatar-preview-trigger:hover ~ .avatar-preview-bubble,
+.avatar-preview-bubble:hover {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.modal-header.custom-header {
+    background-color: #3d6eaf; /* contoh biru custom */
+    color: white;
+}
+
+
+/* Styling Tom Select untuk Dark Mode di Tabler */
+body.theme-dark .ts-wrapper {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border-color: #334155;
+  }
+
+  body.theme-dark .ts-wrapper .ts-control {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border-color: #334155;
+  }
+
+  body.theme-dark .ts-wrapper .ts-control input {
+    color: #f8fafc;
+  }
+
+  body.theme-dark .ts-wrapper .ts-dropdown {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  body.theme-dark .ts-wrapper .ts-dropdown .ts-option {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  body.theme-dark .ts-wrapper .ts-dropdown .ts-option:hover,
+  body.theme-dark .ts-wrapper .ts-dropdown .ts-option.selected,
+  body.theme-dark .ts-wrapper .ts-dropdown .ts-option.active {
+    background-color: #334155;
+    color: #ffffff;
+  }
+
+/* Saat input dalam keadaan aktif (dropdown terbuka) */
+body.theme-dark .ts-wrapper.focus .ts-control {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+    box-shadow: 0 0 0 1px #475569; /* opsional: efek fokus */
+  }
+
+  /* Fokus pada .item juga */
+  body.theme-dark .ts-wrapper.focus .ts-control .item {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+  }
+
+  body.theme-dark .ts-wrapper .ts-control {
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+
+  .parent-form-section {
+    position: relative;
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius);
+    padding: 1.5rem 1rem 1rem;
+    margin-bottom: 2rem;
+    background-color: var(--tblr-bg-surface-secondary);
+}
+.parent-form-section::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: var(--tblr-bg-surface-secondary);
+    padding: 0 1rem;
+    color: var(--tblr-body-color);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 20px;
+    box-shadow: var(--tblr-box-shadow-sm);
+}
+.form-ayah {
+    border-top: 3px solid var(--tblr-blue);
+}
+.form-ibu {
+    border-top: 3px solid var(--tblr-pink);
+}
+.form-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--tblr-border-color);
+}
+.form-header h6 {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+  /* Custom Card Header Styles - Spesifik untuk class card-header-custom */
+.card-header-custom {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    padding: 1rem 1.25rem;
+}
+
+/* Light Mode */
+:root, [data-bs-theme=light] {
+    --card-custom-header-bg: #e3f2fd; /* Soft blue */
+    --card-custom-header-text: #0d47a1; /* Dark blue */
+    --card-custom-header-hover: #bbdefb; /* Slightly darker blue on hover */
+    --card-custom-border: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode */
+[data-bs-theme=dark] .card-header-custom {
+    --card-custom-header-bg: #1e3a8a; /* Deep blue */
+    --card-custom-header-text: #e0f2fe; /* Light blue text */
+    --card-custom-header-hover: #1e40af; /* Slightly lighter blue */
+    --card-custom-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Applied Styles */
+.card-header-custom {
+    background-color: var(--card-custom-header-bg) !important;
+    color: var(--card-custom-header-text) !important;
+    border-bottom: 1px solid var(--card-custom-border);
+}
+
+.card-header-custom:hover {
+    background-color: var(--card-custom-header-hover) !important;
+}
+
+.card-header-custom .collapse-icon {
+    transition: transform 0.3s ease; /* Transisi halus untuk rotasi */
+    display: inline-block; /* Pastikan SVG dapat dirotasi */
+}
+
+.card-header-custom[aria-expanded="true"] .collapse-icon {
+    transform: rotate(180deg); /* Putar chevron down menjadi up */
+}
+
+/* Pertahankan gaya lain yang sudah ada */
+.card-header-custom {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    padding: 1rem 1.25rem;
+}
+
+.card-header-custom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-custom-border), transparent);
+}
+
+.card-header-custom h5 {
+    font-weight: 600;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.card-header-custom h5::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 3px;
+    background-color: currentColor;
+    border-radius: 3px;
+    opacity: 0.7;
+}
+
+/* Custom Button Close Modal *//* Custom Close Button - Enhanced Version */
+.btn-close {
+    --close-btn-color-light: #6c757d;       /* Default gray for light */
+    --close-btn-color-dark: #adb5bd;        /* Default gray for dark */
+    --close-btn-hover-light: #0d6efd;       /* Blue for light hover */
+    --close-btn-hover-dark: #ffffff;        /* White for dark hover */
+    --close-btn-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    opacity: 0.7;
+    transition: var(--close-btn-transition);
+    background-size: 30%;
+    width: 0.8em;
+    height: 0.8em;
+  }
+
+  /* Light Mode Base */
+  .btn-close {
+    filter: none;
+    color: var(--close-btn-color-light);
+  }
+
+  /* Dark Mode Base */
+  [data-bs-theme="dark"] .btn-close {
+    filter: invert(0.7);
+    color: var(--close-btn-color-dark);
+  }
+
+  /* Hover Effects - Light Mode */
+  .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+    color: var(--close-btn-hover-light);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230d6efd'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+  }
+
+  /* Hover Effects - Dark Mode */
+  [data-bs-theme="dark"] .btn-close:hover {
+    color: var(--close-btn-hover-dark);
+    filter: invert(1);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+  }
+
+  /* Focus State */
+  .btn-close:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    outline: none;
+  }
+
+  /* Active State */
+  .btn-close:active {
+    transform: rotate(90deg) scale(0.9);
+  }
+
+
+  /* Flatpickr Dark Theme Custom */
+.flatpickr-calendar.dark-theme {
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+.flatpickr-calendar.dark-theme .flatpickr-day,
+.flatpickr-calendar.dark-theme .flatpickr-weekday,
+.flatpickr-calendar.dark-theme .flatpickr-month,
+.flatpickr-calendar.dark-theme .flatpickr-current-month,
+.flatpickr-calendar.dark-theme .flatpickr-monthDropdown-months,
+.flatpickr-calendar.dark-theme .flatpickr-prev-month,
+.flatpickr-calendar.dark-theme .flatpickr-next-month,
+.flatpickr-calendar.dark-theme .flatpickr-year {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Hari aktif dan hover */
+.flatpickr-calendar.dark-theme .flatpickr-day:hover,
+.flatpickr-calendar.dark-theme .flatpickr-day.today,
+.flatpickr-calendar.dark-theme .flatpickr-day.selected {
+    background-color: #444;
+    border-color: #666;
+    color: #fff;
+}
+
+/* Batas hari tidak aktif */
+.flatpickr-calendar.dark-theme .flatpickr-day.disabled,
+.flatpickr-calendar.dark-theme .flatpickr-day.prevMonthDay,
+.flatpickr-calendar.dark-theme .flatpickr-day.nextMonthDay {
+    color: #777 !important;
+}
+
+.flatpickr-calendar {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+
+
+.btn-add-guardian {
+    transition: transform 0.2s ease;
+}
+.btn-add-guardian:hover {
+    transform: translateY(-2px);
+}
+.guardian-section {
+    animation: slideIn 0.5s ease;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* CSS Buku Induk Belum Ada Foto */
+.empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+    background-color: var(--tblr-bg-surface); /* Sesuai tema */
+    border-radius: 8px;
+    border: 1px dashed var(--tblr-border-color);
+    transition: all 0.3s ease;
+    color: var(--tblr-body-color);
+}
+
+.empty-state:hover {
+    background-color: var(--tblr-bg-surface-hover);
+    border-color: var(--tblr-primary-border);
+}
+
+.empty-state-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background-color: var(--tblr-bg-surface-secondary);
+    color: var(--tblr-primary);
+}
+
+.empty-state-icon svg {
+    width: 32px;
+    height: 32px;
+    stroke-width: 1.5;
+}
+
+.empty-state-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--tblr-body-color);
+}
+
+.empty-state-subtitle {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--tblr-secondary-color);
+}
+
+.student-photo {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.student-photo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.card-sm {
+    border-radius: 8px;
+    height: 100%;
+}
+.table-borderless td {
+    padding: 0.35rem 0;
+    vertical-align: middle;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+
+.badge {
+    padding: 0.35rem 0.65rem;
+    border-radius: 20px;
+}
+
+
+.signature-container {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.qr-section {
+    flex: 0 0 auto;
+    max-width: 160px;
+}
+
+.signature-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+@media print {
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #aaa !important;
+    }
+}
+
+.qr-title {
+    color: #007BFF;
+}
+
+.footer-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-top: 1px solid #ddd;
+    color: #555;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    background: white;
+  }
+
+  .footer-left {
+    text-align: left;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+
+
+  /* CSS Spesifik untuk halaman detail siswa */
+.detail-siswa-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.detail-siswa-main-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+/* Bungkus bagian teks agar bisa fleksibel */
+.detail-siswa-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-siswa-actions {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.detail-siswa-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.detail-siswa-avatar {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge khusus untuk halaman detail siswa */
+.detail-siswa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .detail-siswa-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-siswa-main-content {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .detail-siswa-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .detail-siswa-badges .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .detail-siswa-actions {
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .detail-siswa-info h1 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+
+.alert-danger {
+    --tblr-alert-bg: rgba(var(--tblr-danger-rgb), 0.1);
+    --tblr-alert-color: var(--tblr-danger);
+    --tblr-alert-border-color: var(--tblr-danger);
+}
+
+
+
+            .input-group-text {
+                background-color: transparent;
+            }
+
+            .form-control:focus {
+                box-shadow: 0 0 0 2px rgba(70, 127, 207, 0.25);
+            }
+
+            #loginButton {
+                transition: all 0.3s ease;
+                height: 42px;
+            }
+
+            #loginButton:hover {
+                transform: translateY(-1px);
+            }
+
+
+.table-compact td, .table-compact th {
+        padding: 4px 8px !important;
+        font-size: 13px;
+    }
+
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        color: inherit;
+        text-decoration: none;
+        transition: all .2s ease;
+        border-radius: var(--tblr-border-radius);
+        margin-bottom: 2px;
+    }
+
+    .nav-link:hover {
+        background-color: var(--tblr-bg-surface-tertiary);
+    }
+
+    .nav-link.active {
+        color: var(--tblr-primary);
+        background-color: var(--tblr-primary-bg-subtle);
+    }
+
+    .nav-link-icon {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .nav-link-title {
+        flex: 1;
+    }
+
+    .nav-link-chevron {
+        opacity: .5;
+        transition: transform .2s ease;
+    }
+
+    .nav-link[aria-expanded="true"] .nav-link-chevron {
+        transform: rotate(90deg);
+    }
+
+    .nav.flex-column {
+        padding-left: 0;
+    }
+
