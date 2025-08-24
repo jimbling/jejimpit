@@ -134,22 +134,12 @@
 
 
 
-                @php
-                    $currentRoute = Route::currentRouteName();
-
-                    // Fungsi untuk mengecek apakah route termasuk list tertentu
-                    function isActiveRoute(array $routes)
-                    {
-                        global $currentRoute;
-                        return in_array($currentRoute, $routes) ? 'active' : '';
-                    }
-                @endphp
-
                 @role('super-admin|user')
                     <li
-                        class="nav-item dropdown {{ isActiveRoute(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index']) }}">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button"
-                            aria-expanded="false" data-bs-auto-close="outside">
+                        class="nav-item dropdown {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}">
+                        <a class="nav-link dropdown-toggle {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}"
+                            href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"
+                            data-bs-auto-close="outside">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <!-- Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -169,34 +159,59 @@
                             <span class="nav-link-title">Jimpitan</span>
                         </a>
 
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item {{ isActiveRoute(['induk.warga']) }}"
-                                href="{{ route('induk.warga') }}">
+                        <div
+                            class="dropdown-menu {{ isDropdownOpen(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}">
+                            <a class="dropdown-item {{ isActiveRoute('induk.warga') }}" href="{{ route('induk.warga') }}">
                                 Data Warga
                             </a>
 
-                            <!-- Submenu Jimpitan -->
+                            <!-- Submenu Petugas -->
                             <div class="dropend">
-                                <a class="dropdown-item dropdown-toggle {{ isActiveRoute(['kehadiran.index', 'transaksi.jimpitan.index']) }}"
+                                <a class="dropdown-item dropdown-toggle {{ isActiveParent(['kehadiran.index', 'transaksi.jimpitan.index']) }}"
                                     href="#" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
                                     aria-expanded="false">
-                                    Jimpitan
+                                    Petugas
                                 </a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item {{ isActiveRoute(['#']) }}">BKU</a>
+                                <div
+                                    class="dropdown-menu {{ isDropdownOpen(['kehadiran.index', 'transaksi.jimpitan.index']) }}">
                                     <a href="{{ route('transaksi.jimpitan.index') }}"
-                                        class="dropdown-item {{ isActiveRoute(['transaksi.jimpitan.index']) }}">
+                                        class="dropdown-item {{ isActiveRoute('transaksi.jimpitan.index') }}">
                                         Transaksi
                                     </a>
                                     <a href="{{ route('kehadiran.index') }}"
-                                        class="dropdown-item {{ isActiveRoute(['kehadiran.index']) }}">
+                                        class="dropdown-item {{ isActiveRoute('kehadiran.index') }}">
                                         Kehadiran
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Submenu Penatausahaan -->
+                            <div class="dropend">
+                                <a class="dropdown-item dropdown-toggle {{ isActiveParent(['penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}"
+                                    href="#" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button"
+                                    aria-expanded="false">
+                                    Penatausahaan
+                                </a>
+                                <div
+                                    class="dropdown-menu {{ isDropdownOpen(['penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}">
+                                    <a href="{{ route('penerimaan.index') }}"
+                                        class="dropdown-item {{ isActiveRoute('penerimaan.index') }}">
+                                        Penerimaan
+                                    </a>
+                                    <a href="{{ route('pengeluaran.index') }}"
+                                        class="dropdown-item {{ isActiveRoute('pengeluaran.index') }}">
+                                        Pengeluaran
+                                    </a>
+                                    <a href="{{ route('bku.lengkap.index') }}"
+                                        class="dropdown-item {{ isActiveRoute('bku.lengkap.index') }}">
+                                        Buku Kas Umum
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </li>
                 @endrole
+
 
 
                 @role('super-admin')

@@ -1,12 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Modules\Jimpitan\PetugasController;
 use App\Http\Controllers\Modules\Warga\WargaController;
+use App\Http\Controllers\Modules\Jimpitan\BkuController;
 use App\Http\Controllers\Modules\Admin\DashboardController;
-use App\Http\Controllers\Modules\Jimpitan\KehadiranController;
+use App\Http\Controllers\Modules\Jimpitan\PetugasController;
 use App\Http\Controllers\Modules\Pengaturan\AksesController;
 use App\Http\Controllers\Modules\Pengaturan\SistemController;
+use App\Http\Controllers\Modules\Jimpitan\KehadiranController;
+use App\Http\Controllers\Modules\Jimpitan\BkuLengkapController;
+use App\Http\Controllers\Modules\Jimpitan\PenerimaanController;
+use App\Http\Controllers\Modules\Jimpitan\PengeluaranController;
 use App\Http\Controllers\Modules\Pengaturan\PembaruanController;
 use App\Http\Controllers\Modules\Pengaturan\PengaturanController;
 use App\Http\Controllers\Modules\Pengaturan\GoogleDriveController;
@@ -54,6 +58,9 @@ Route::prefix('pengaturan/akses')->name('pengaturan.akses.')->group(function () 
         ->can('reset password')->name('reset-password');
     Route::delete('hapus-akun', [AksesController::class, 'hapusAkun'])
         ->can('hapus akun')->name('hapus-akun');
+
+    Route::post('tambah-user', [AksesController::class, 'tambahUser'])
+        ->can('tambah akun')->name('tambah.user');
 });
 
 
@@ -107,6 +114,10 @@ Route::prefix('induk')->middleware(['auth', 'verified'])->name('induk.')->group(
     Route::post('/warga', [WargaController::class, 'store'])->can('atur warga')->name('warga.store');
 });
 
+Route::get('/export-qr', [WargaController::class, 'export'])->name('warga.qr.export');
+Route::get('/warga/{id}/qr', [WargaController::class, 'exportSingle'])->name('induk.warga.qr');
+
+
 // Transaksi Jimpitan
 Route::prefix('transaksi')->middleware(['auth', 'verified'])->name('transaksi.')->group(function () {
     Route::get('/jimpitan', [TransaksiJimpitanController::class, 'index'])
@@ -157,6 +168,35 @@ Route::middleware(['auth', 'role:user'])->group(function () {
         return view('modules.petugas.profile.edit');
     })->name('petugas.profile.edit');
 });
+
+Route::middleware(['auth', 'verified', 'can:atur penerimaan'])
+    ->prefix('penerimaan')
+    ->name('penerimaan.')
+    ->group(function () {
+        Route::get('/', [PenerimaanController::class, 'index'])->name('index');
+        Route::post('/generate-mingguan', [PenerimaanController::class, 'generateMingguan'])->name('generate-mingguan');
+        Route::post('/generate-bulanan', [PenerimaanController::class, 'generateBulanan'])->name('generate-bulanan');
+        Route::post('/lock-mingguan/{id}', [PenerimaanController::class, 'lockMingguan'])->name('lock-mingguan');
+        Route::post('/lock-bulanan/{id}', [PenerimaanController::class, 'lockBulanan'])->name('lock-bulanan');
+        Route::delete('/hapus-mingguan/{id}', [PenerimaanController::class, 'hapusMingguan'])->name('hapus-mingguan');
+        Route::delete('/hapus-bulanan/{id}', [PenerimaanController::class, 'hapusBulanan'])->name('hapus-bulanan');
+    });
+
+Route::middleware(['auth', 'verified', 'can:atur pengeluaran'])->group(function () {
+    Route::resource('pengeluaran', PengeluaranController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+    Route::get('/pengeluaran/get-saldo', [PengeluaranController::class, 'getSaldo'])
+        ->name('pengeluaran.getSaldo');
+});
+
+Route::middleware(['auth', 'verified', 'can:atur bku'])
+    ->prefix('bku')
+    ->name('bku.')
+    ->group(function () {
+        Route::get('/lengkap', [BkuLengkapController::class, 'index'])->name('lengkap.index');
+        Route::post('/lengkap/generate', [BkuLengkapController::class, 'generate'])->name('lengkap.generate');
+    });
 
 
 require __DIR__ . '/auth.php';

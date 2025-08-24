@@ -36,6 +36,30 @@
                                             </svg>
                                             Tambah Warga
                                         </button>
+                                        <a href="{{ route('warga.qr.export') }}" class="btn btn-outline-success">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-qrcode">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path
+                                                    d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                                <path d="M7 17l0 .01" />
+                                                <path
+                                                    d="M14 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                                <path d="M7 7l0 .01" />
+                                                <path
+                                                    d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                                <path d="M17 7l0 .01" />
+                                                <path d="M14 14l3 0" />
+                                                <path d="M20 14l0 .01" />
+                                                <path d="M14 14l0 3" />
+                                                <path d="M14 20l3 0" />
+                                                <path d="M17 17l3 0" />
+                                                <path d="M20 17l0 3" />
+                                            </svg>
+                                            QR Semua Warga
+                                        </a>
 
 
                                         <div class="input-group input-group-flat w-auto">
@@ -106,10 +130,10 @@
                                             <th>
                                                 <button class="table-sort d-flex justify-content-between"
                                                     data-sort="sort-rw">RW
-                                                    Lahir</button>
+                                                </button>
                                             </th>
                                             <th>
-                                                <button class="table-sort text-center">Aksi</button>
+                                                <button class="table-sort  d-flex justify-content-between">Aksi</button>
                                             </th>
                                         </tr>
                                     </thead>
@@ -121,32 +145,36 @@
                                                         type="checkbox" aria-label="Select siswa"
                                                         value="{{ $warga->id }}" />
                                                 </td>
-
                                                 <td class="sort-nama">{{ $warga->nama_kk }}</td>
                                                 <td class="sort-id">{{ $warga->kode_unik }}</td>
                                                 <td class="sort-alamat">{{ $warga->alamat }}</td>
                                                 <td class="sort-rt">{{ $warga->rt }}</td>
                                                 <td class="sort-rw">{{ $warga->rw }}</td>
 
-                                                <td class="text-end">
-                                                    <div class="btn-list justify-content-end">
-                                                        {{-- Lihat Detail --}}
-                                                        <a href="#" class="btn btn-outline-primary btn-icon"
+                                                <td>
+                                                    <div class="btn-list">
+                                                        {{-- Cetak QR --}}
+                                                        <a href="{{ route('induk.warga.qr', $warga->id) }}"
+                                                            target="_blank" class="btn btn-outline-success btn-icon"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="Lihat Detail">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye-search">
+                                                            title="Cetak QR">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                class="icon icon-tabler icon-tabler-qrcode" width="24"
+                                                                height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                stroke="currentColor" fill="none"
+                                                                stroke-linecap="round" stroke-linejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                                <path
-                                                                    d="M12 18c-.328 0 -.652 -.017 -.97 -.05c-3.172 -.332 -5.85 -2.315 -8.03 -5.95c2.4 -4 5.4 -6 9 -6c3.465 0 6.374 1.853 8.727 5.558" />
-                                                                <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                                                <path d="M20.2 20.2l1.8 1.8" />
+                                                                <rect x="4" y="4" width="6" height="6"
+                                                                    rx="1" />
+                                                                <rect x="14" y="4" width="6" height="6"
+                                                                    rx="1" />
+                                                                <rect x="4" y="14" width="6" height="6"
+                                                                    rx="1" />
+                                                                <path d="M14 14h2v2h-2z" />
+                                                                <path d="M20 14v6h-6v-6h6z" />
                                                             </svg>
                                                         </a>
+
 
 
 
@@ -154,7 +182,7 @@
                                                         <button type="button"
                                                             class="btn btn-outline-danger btn-icon btn-hapus-warga"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="Hapus Siswa"
+                                                            title="Hapus Warga"
                                                             data-url="{{ route('induk.warga.destroy', $warga->id) }}">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
@@ -327,6 +355,29 @@
                 document.getElementById('page-count').textContent = newPageCount;
             }
         </script>
+
+
+        <script>
+            document.querySelectorAll('.btn-hapus-warga').forEach(button => {
+                button.addEventListener('click', function() {
+                    const url = this.dataset.url;
+
+                    const form = document.querySelector('#modalKonfirmasiHapus form');
+                    form.action = url;
+
+                    form.querySelectorAll('input[name="ids[]"]').forEach(e => e.remove());
+
+                    const konfirmasiModal = new bootstrap.Modal(document.getElementById(
+                        'modalKonfirmasiHapus'));
+                    konfirmasiModal.show();
+
+                    form.onsubmit = function(e) {
+
+                    };
+                });
+            });
+        </script>
+
         <script>
             document.getElementById('btn-konfirmasi-hapus-warga').addEventListener('click', function() {
                 const selected = document.querySelectorAll('.table-selectable-check:checked');
@@ -371,27 +422,6 @@
                     e.preventDefault();
                     form.submit();
                 };
-            });
-        </script>
-
-        <script>
-            document.querySelectorAll('.btn-hapus-warga').forEach(button => {
-                button.addEventListener('click', function() {
-                    const url = this.dataset.url;
-
-                    const form = document.querySelector('#modalKonfirmasiHapus form');
-                    form.action = url;
-
-                    form.querySelectorAll('input[name="ids[]"]').forEach(e => e.remove());
-
-                    const konfirmasiModal = new bootstrap.Modal(document.getElementById(
-                        'modalKonfirmasiHapus'));
-                    konfirmasiModal.show();
-
-                    form.onsubmit = function(e) {
-
-                    };
-                });
             });
         </script>
 

@@ -27,6 +27,18 @@
                             </select>
                         </div>
 
+                        <!-- Petugas -->
+                        <div class="col-md-6">
+                            <label for="user_id" class="form-label">Petugas</label>
+                            <select class="form-select" id="user_id" name="user_id" required>
+                                <option value="" selected disabled>-- Pilih Petugas --</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <!-- Tanggal Transaksi -->
                         <div class="col-md-6">
                             <label for="tanggal" class="form-label">Tanggal</label>

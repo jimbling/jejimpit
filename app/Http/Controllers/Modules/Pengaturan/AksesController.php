@@ -9,6 +9,7 @@ use App\Services\Pengaturan\Akses\AksesService;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Helpers\BreadcrumbHelper;
+use Illuminate\Support\Facades\Hash;
 
 class AksesController extends Controller
 {
@@ -109,5 +110,25 @@ class AksesController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function tambahUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->assignRole($request->role);
+
+        return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan!');
     }
 }

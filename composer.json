@@ -37,7 +37,8 @@
     "files": [
         "app/Helpers/BreadcrumbHelper.php",
         "app/Helpers/global.php",
-        "app/Helpers/system_helper.php"
+        "app/Helpers/system_helper.php",
+         "app/Helpers/ActiveHelper.php"
     ]
     },
     "autoload-dev": {

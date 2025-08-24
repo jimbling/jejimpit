@@ -14,7 +14,7 @@
                             <div class="row w-full">
                                 <div class="col">
                                     <h3 class="card-title mb-0">Pengguna</h3>
-                                    <p class="text-secondary m-0">Jumlah Pengguna Terdaftar : {{ $totalUsers }}</p>
+                                    <p class="text-secondary m-0">Pengguna Terdaftar : {{ $totalUsers }}</p>
                                     <!-- Menampilkan jumlah pengguna -->
                                 </div>
                                 <div class="col-md-auto col-sm-12">
@@ -36,6 +36,11 @@
                                                 <kbd>ctrl + K</kbd>
                                             </span>
                                         </div>
+
+                                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                            data-bs-target="#tambahUserModal">
+                                            Tambah Pengguna
+                                        </button>
 
 
                                         <button type="button" class="btn btn-outline-danger"
@@ -265,7 +270,7 @@
     <x-modal.peringatan id="modalPeringatanTidakAdaData" title="Tidak Ada Data Dipilih"
         message="Silakan pilih setidaknya satu pengguna untuk dihapus." btnLabel="Tutup" btnColor="warning"
         formAction="#" method="GET" />
-
+    @include('components.modal.tambah-user')
 
 
     @push('scripts')
@@ -418,18 +423,5 @@
             });
         </script>
     @endpush
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @endsection

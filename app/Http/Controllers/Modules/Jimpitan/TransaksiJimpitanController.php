@@ -19,19 +19,41 @@ class TransaksiJimpitanController extends Controller
 
     public function index(Request $request)
     {
-        $transaksi = TransaksiJimpitan::with(['warga', 'user'])
-            ->orderBy('tanggal', 'asc') // default urut berdasarkan tanggal
-            ->get();
+        $query = TransaksiJimpitan::with(['warga', 'user'])->orderBy('tanggal', 'asc');
+
+        // Filter Warga
+        if ($request->filled('warga_id')) {
+            $query->where('warga_id', $request->warga_id);
+        }
+
+        // Filter Petugas
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filter Tanggal hanya jika diisi
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal', [$request->start_date, $request->end_date]);
+        } elseif ($request->filled('start_date')) {
+            $query->whereDate('tanggal', '>=', $request->start_date);
+        } elseif ($request->filled('end_date')) {
+            $query->whereDate('tanggal', '<=', $request->end_date);
+        }
+
+        $transaksi = $query->get();
+
+
+        // Jika request AJAX, kirim partial table saja
+        if ($request->ajax()) {
+            return view('modules.jimpitan.transaksi.table', compact('transaksi'))->render();
+        }
 
         $wargas = \App\Models\Warga::where('status', 'aktif')->orderBy('nama_kk')->get();
+        $users  = \App\Models\User::orderBy('name')->get();
 
-        return view('modules.jimpitan.transaksi', [
-            'transaksi' => $transaksi,
-            'wargas'    => $wargas, // <-- tambahkan ini
-            'title'     => 'Transaksi Jimpitan',
-            'breadcrumbs' => $this->transaksiService->getBreadcrumbs(),
-        ]);
+        return view('modules.jimpitan.transaksi', compact('transaksi', 'wargas', 'users'));
     }
+
 
 
     /**
@@ -41,18 +63,17 @@ class TransaksiJimpitanController extends Controller
     {
         $validated = $request->validate([
             'warga_id'   => 'required|exists:warga,id',
+            'user_id'    => 'required|exists:users,id',
             'tanggal'    => 'required|date',
             'jumlah'     => 'required|numeric|min:0',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
-        // Tambahkan user_id otomatis
-        $validated['user_id'] = Auth::id();
-
         TransaksiJimpitan::create($validated);
 
         return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan.');
     }
+
 
     /**
      * Hapus satu transaksi
@@ -61,19 +82,6 @@ class TransaksiJimpitanController extends Controller
     {
         $transaksi = TransaksiJimpitan::findOrFail($id);
         $transaksi->delete();
-
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
-    }
-
-    /**
-     * Hapus banyak transaksi sekaligus
-     */
-    public function massDelete(Request $request)
-    {
-        $ids = $request->input('ids', []);
-        if (!empty($ids)) {
-            TransaksiJimpitan::whereIn('id', $ids)->delete();
-        }
 
         return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
     }

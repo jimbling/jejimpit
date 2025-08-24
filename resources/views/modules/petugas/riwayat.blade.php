@@ -62,11 +62,26 @@
             <!-- Empty State -->
             <div x-show="filteredTransaksi.length === 0"
                 class="flex flex-col items-center justify-center mt-6 space-y-2 text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24"
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-40 h-40 mb-6" fill="none" viewBox="0 0 64 64"
                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 17v-6h6v6M12 3v4m0 0L8 7m4-4l4 4" />
+                    <!-- Folder/Base -->
+                    <rect x="8" y="20" width="48" height="32" rx="4" ry="4" class="stroke-gray-300"
+                        stroke-width="2" fill="none" />
+                    <!-- Folder tab -->
+                    <rect x="8" y="14" width="16" height="6" rx="1" ry="1" class="stroke-gray-300"
+                        stroke-width="2" fill="none" />
+                    <!-- Empty line indicator -->
+                    <line x1="16" y1="30" x2="48" y2="30" stroke-width="2"
+                        stroke-linecap="round" class="stroke-gray-300" />
+                    <line x1="16" y1="36" x2="48" y2="36" stroke-width="2"
+                        stroke-linecap="round" class="stroke-gray-300" />
+                    <line x1="16" y1="42" x2="48" y2="42" stroke-width="2"
+                        stroke-linecap="round" class="stroke-gray-300" />
+                    <!-- Optional icon/indicator circle -->
+                    <circle cx="32" cy="52" r="4" class="fill-gray-200 stroke-gray-300" stroke-width="2" />
                 </svg>
+
+                <h3 class="text-xl font-semibold mb-2 text-gray-600">History Kosong</h3>
                 <p>Belum ada transaksi untuk ditampilkan</p>
             </div>
         </div>
