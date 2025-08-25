@@ -18,7 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // RoleSeeder::class,
             // PermissionSeeder::class,
-            WargaSeeder::class, // <-- panggil seeder warga di sini
+            WargaSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            SuperAdminSeeder::class,
+            UserSeeder::class,
         ]);
         // Pastikan user admin ada
         $user = User::first();

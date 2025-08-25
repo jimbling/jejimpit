@@ -3,12 +3,14 @@
 
 namespace App\Http\Controllers\Modules\Jimpitan;
 
+use Carbon\Carbon;
+use App\Models\BkuLengkap;
 use Illuminate\Http\Request;
-use App\Models\penerimaanMingguan;
 use App\Models\PenerimaanBulanan;
 use App\Models\TransaksiJimpitan;
-use Carbon\Carbon;
+use App\Models\penerimaanMingguan;
 use App\Http\Controllers\Controller;
+use App\Models\PengeluaranJimpitan;
 
 class PenerimaanController extends Controller
 {
@@ -60,18 +62,39 @@ class PenerimaanController extends Controller
 
     public function generateBulanan(Request $request)
     {
-        $bulan = $request->input('bulan', now()->month);
-        $tahun = $request->input('tahun', now()->year);
+        $bulan = (int) $request->input('bulan', now()->month);
+        $tahun = (int) $request->input('tahun', now()->year);
 
         // Hapus yang belum locked
-        PenerimaanBulanan::where('bulan', $bulan)->where('tahun', $tahun)->where('locked', false)->delete();
+        PenerimaanBulanan::where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->where('locked', false)
+            ->delete();
 
-        $saldoAwal = PenerimaanBulanan::where('bulan', $bulan - 1)->where('tahun', $tahun)->value('saldo_akhir') ?? 0;
+        // cari saldo akhir bulan sebelumnya dari BKU Lengkap
+        $prevBulan = $bulan == 1 ? 12 : $bulan - 1;
+        $prevTahun = $bulan == 1 ? $tahun - 1 : $tahun;
+
+        $prevSaldo = BkuLengkap::where('bulan', $prevBulan)
+            ->where('tahun', $prevTahun)
+            ->where('is_saldo_akhir', 1)
+            ->value('saldo');
+
+        $saldoAwal = $prevSaldo ?? 0;
+
+        // hitung total penerimaan bulan ini
         $totalPenerimaan = TransaksiJimpitan::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->sum('jumlah');
-        $saldoAkhir = $saldoAwal + $totalPenerimaan;
 
+        // hitung total pengeluaran bulan ini (kalau mau lebih akurat saldo_akhir)
+        $totalPengeluaran = PengeluaranJimpitan::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->sum('jumlah');
+
+        $saldoAkhir = $saldoAwal + $totalPenerimaan - $totalPengeluaran;
+
+        // simpan ringkasan
         PenerimaanBulanan::create([
             'bulan' => $bulan,
             'tahun' => $tahun,
@@ -82,6 +105,7 @@ class PenerimaanController extends Controller
 
         return redirect()->back()->with('success', 'BKU Bulanan berhasil digenerate');
     }
+
 
     public function lockMingguan($id)
     {
