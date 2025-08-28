@@ -7,9 +7,10 @@ use App\Models\Checkin;
 use App\Models\Jimpitan;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
+use App\Services\Jimpitan\WhatsappService;
 use App\Http\Controllers\Controller;
-use App\Services\Jimpitan\KehadiranService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Jimpitan\KehadiranService;
 
 class PetugasController extends Controller
 {
@@ -42,7 +43,7 @@ class PetugasController extends Controller
     /**
      * Simpan entri jimpitan baru
      */
-    public function store(Request $request)
+    public function store(Request $request, WhatsappService $whatsappService)
     {
         $request->validate([
             'warga_id' => 'required|exists:warga,id',
@@ -78,36 +79,13 @@ class PetugasController extends Controller
             ->count();
         $checkin->save();
 
-        // Ambil data warga & petugas
-        $warga = Warga::find($request->warga_id);
-        $petugas = auth()->user()->name;
-        $jumlahFormatted = number_format($request->jumlah, 0, ',', '.');
-
-        // Format tanggal lokal
-        $tanggalCarbon = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal);
-        $tanggalFormatted = $tanggalCarbon->translatedFormat('d F Y');
-
-        // Buat pesan WhatsApp lebih estetik untuk seluruh data jimpitan
-        $message = "Halo Bapak/Ibu *{$warga->nama_kk}*,\n\n"
-            . "Jimpitan Anda sebesar *Rp {$jumlahFormatted}* pada tanggal *{$tanggalFormatted}* "
-            . "telah dicatat oleh petugas *{$petugas}*.\n\n"
-            . "Terima kasih atas partisipasi dan kontribusi Anda! 🙏\n\n"
-            . "Anda dapat mengecek seluruh data transaksi jimpitan (penerimaan, pengeluaran, dll) di:\n"
-            . "*https://jimpitan.remaked.web.id*";
-
-
-        // Nomor WA warga (ubah 0 diawal jadi 62)
-        $nomor = preg_replace('/^0/', '62', $warga->no_telp);
-        $waUrl = "https://wa.me/{$nomor}?text=" . urlencode($message);
+        // 🔥 Panggil service WhatsApp
+        $waData = $whatsappService->generateMessage($transaksi);
 
         // Redirect ke dashboard dengan session
-        return redirect()->route('petugas.home')->with('jimpitan_success', [
-            'warga' => $warga->nama_kk,
-            'tanggal' => $tanggalFormatted,
-            'jumlah' => $jumlahFormatted,
-            'wa_url' => $waUrl, // ini untuk tombol WA di alert
-        ]);
+        return redirect()->route('petugas.home')->with('jimpitan_success', $waData);
     }
+
 
 
     public function riwayat()

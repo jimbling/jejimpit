@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Modules\Jimpitan;
 
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Jimpitan\WhatsappService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Jimpitan\TransaksiService;
 
 class TransaksiJimpitanController extends Controller
@@ -81,6 +82,17 @@ class TransaksiJimpitanController extends Controller
 
         return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan.');
     }
+
+    public function resendWhatsapp($id, WhatsappService $wa)
+    {
+        $transaksi = TransaksiJimpitan::with(['warga', 'user'])->findOrFail($id);
+
+        $waData = $wa->generateMessage($transaksi);
+
+        // Langsung buka halaman wa.me
+        return redirect()->away($waData['wa_url']);
+    }
+
 
 
     /**
