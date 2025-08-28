@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
             // RoleSeeder::class,
             // PermissionSeeder::class,
             WargaSeeder::class,
-            PermissionSeeder::class,
-            RoleSeeder::class,
-            SuperAdminSeeder::class,
-            UserSeeder::class,
+            // PermissionSeeder::class,
+            // RoleSeeder::class,
+            // SuperAdminSeeder::class,
+            // UserSeeder::class,
         ]);
         // Pastikan user admin ada
         $user = User::first();

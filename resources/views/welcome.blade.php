@@ -172,14 +172,10 @@
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="btn">
+                        <a href="{{ route('login') }}" class="btn btn-primary">
                             Masuk
                         </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn btn-primary ms-2">
-                                Daftar
-                            </a>
-                        @endif
+
                     @endauth
                 @endif
             </div>
@@ -197,13 +193,13 @@
                     <p class="lead mb-4">Membangun kebersamaan dan kemandirian warga melalui sistem jimpitan digital di
                         Kedungtangkil RT 63.</p>
                     <div class="d-flex gap-3">
-                        <a href="{{ route('register') }}" class="btn btn-lg btn-warning">Daftar Sekarang</a>
+
                         <a href="#stats" class="btn btn-lg btn-outline-light">Lihat Statistik</a>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-lg-block">
-                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/undraw_personal-goals_f9bb.svg"
-                        alt="Hero illustration" class="img-fluid">
+                <div class="col-lg-6 ">
+                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/jimpitan.png" alt="Hero illustration"
+                        class="img-fluid">
                 </div>
             </div>
         </div>
@@ -402,25 +398,11 @@
                     <p class="text-muted lead mb-4">Jimpitan adalah tradisi gotong royong warga RT 63 Kedungtangkil
                         dalam bentuk iuran sukarela yang dikumpulkan secara berkala untuk membiayai kegiatan
                         kemasyarakatan.</p>
-                    <div class="d-flex gap-3">
-                        <div class="feature-icon bg-green bg-opacity-10 text-green">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-leaf"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M5 21c.5 -4.5 2.5 -8 7 -10" />
-                                <path d="M9 18c6.218 0 10.5 -3.288 12 -12v-2h-4.014c-9 0 -12.986 4 -12 12z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="mb-2">Ramah Lingkungan</h4>
-                            <p class="text-muted mb-0">Mengurangi penggunaan kertas dengan sistem digital</p>
-                        </div>
-                    </div>
+
                 </div>
-                <div class="col-lg-6 d-none d-lg-block">
-                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/undraw_team-work_i1f3.svg"
-                        alt="Community illustration" class="img-fluid">
+                <div class="col-lg-6 ">
+                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/royong.png" alt="Community illustration"
+                        class="img-fluid">
                 </div>
             </div>
         </div>
