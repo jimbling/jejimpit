@@ -26,3 +26,4 @@ require __DIR__ . '/modules/pengeluaran.php';
 require __DIR__ . '/modules/bku.php';
 require __DIR__ . '/modules/laporan.php';
 require __DIR__ . '/modules/gdrive.php';
+require __DIR__ . '/modules/petugas.php';
