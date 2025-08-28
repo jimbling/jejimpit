@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', fn() => view('welcome'));
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/dashboard', [App\Http\Controllers\Modules\Admin\DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
