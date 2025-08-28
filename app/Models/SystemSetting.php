@@ -13,9 +13,9 @@ class SystemSetting extends Model
 
     // Isi kolom yang boleh diisi massal
     protected $fillable = [
-        'nama_sekolah',
-        'npsn',
-        'alamat_lengkap',
+        'nama_rt',
+        'nama_koordinator',
+        'nama_dusun',
         'desa_kelurahan',
         'kecamatan',
         'kabupaten_kota',
@@ -25,14 +25,8 @@ class SystemSetting extends Model
         'website',
         'email',
         'no_telp',
-        'kepala_sekolah',
-        'nip_kepala_sekolah',
         'logo',
         'favicon',
-        'tahun_berdiri',
-        'jenjang_pendidikan',
-        'status_sekolah',
-        'kurikulum_berlaku',
         'kop_sekolah',
         'qrcode_logo',
     ];

@@ -14,9 +14,9 @@ class UpdateSystemSettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'nama_sekolah' => 'required|string|max:255',
-            'npsn' => 'nullable|string|max:20',
-            'alamat_lengkap' => 'nullable|string',
+            'nama_dusun' => 'required|string|max:255',
+            'nama_rt' => 'nullable|string|max:20',
+            'nama_koordinator' => 'nullable|string',
             'desa_kelurahan' => 'nullable|string',
             'kecamatan' => 'nullable|string',
             'kabupaten_kota' => 'nullable|string',
@@ -26,12 +26,6 @@ class UpdateSystemSettingRequest extends FormRequest
             'website' => 'nullable|url',
             'email' => 'nullable|email',
             'no_telp' => 'nullable|string|max:20',
-            'kepala_sekolah' => 'nullable|string|max:255',
-            'nip_kepala_sekolah' => 'nullable|string|max:30',
-            'tahun_berdiri' => 'nullable|digits:4',
-            'jenjang_pendidikan' => 'nullable|string|max:50',
-            'status_sekolah' => 'nullable|string|max:20',
-            'kurikulum_berlaku' => 'nullable|string|max:100',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'favicon' => 'nullable|image|mimes:ico,png|max:1024',
             'kop_sekolah' => 'nullable|mimes:png,svg+xml|max:2048',

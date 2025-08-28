@@ -1,6 +1,6 @@
 @extends('layouts.tabler') <!-- Gunakan layout utama Tabler -->
 
-@section('title', 'Dashboard')
+@section('title', 'Transaksi Jimpitan')
 
 @section('page-title', 'Welcome to the Dashboard')
 

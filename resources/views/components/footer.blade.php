@@ -27,7 +27,7 @@
                         Copyright &copy; 2025 - {{ date('Y') }}
                         <a href="{{ system_setting('website') }}" class="link-secondary" target="_blank"
                             rel="noopener noreferrer">
-                            {{ system_setting('nama_sekolah') }}
+                            {{ system_setting('nama_dusun') }}
                         </a>
                     </li>
                 </ul>

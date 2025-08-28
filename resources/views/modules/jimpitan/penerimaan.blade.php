@@ -1,7 +1,7 @@
 @extends('layouts.tabler')
 
-@section('title', 'penerimaan Penerimaan Jimpitan')
-@section('page-title', 'penerimaan Penerimaan Jimpitan')
+@section('title', ' Penerimaan Jimpitan')
+@section('page-title', ' Penerimaan Jimpitan')
 
 @section('content')
     <div class="container-xl">

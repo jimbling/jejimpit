@@ -78,16 +78,37 @@ class PetugasController extends Controller
             ->count();
         $checkin->save();
 
-        // Ambil nama warga
+        // Ambil data warga & petugas
         $warga = Warga::find($request->warga_id);
+        $petugas = auth()->user()->name;
+        $jumlahFormatted = number_format($request->jumlah, 0, ',', '.');
 
-        return redirect()->route('petugas.home')
-            ->with('jimpitan_success', [
-                'warga' => $warga->nama_kk,
-                'tanggal' => $tanggal,
-                'jumlah' => $request->jumlah,
-            ]);
+        // Format tanggal lokal
+        $tanggalCarbon = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal);
+        $tanggalFormatted = $tanggalCarbon->translatedFormat('d F Y');
+
+        // Buat pesan WhatsApp lebih estetik untuk seluruh data jimpitan
+        $message = "Halo Bapak/Ibu *{$warga->nama_kk}*,\n\n"
+            . "Jimpitan Anda sebesar *Rp {$jumlahFormatted}* pada tanggal *{$tanggalFormatted}* "
+            . "telah dicatat oleh petugas *{$petugas}*.\n\n"
+            . "Terima kasih atas partisipasi dan kontribusi Anda! 🙏\n\n"
+            . "Anda dapat mengecek seluruh data transaksi jimpitan (penerimaan, pengeluaran, dll) di:\n"
+            . "*https://jimpitan.remaked.web.id*";
+
+
+        // Nomor WA warga (ubah 0 diawal jadi 62)
+        $nomor = preg_replace('/^0/', '62', $warga->no_telp);
+        $waUrl = "https://wa.me/{$nomor}?text=" . urlencode($message);
+
+        // Redirect ke dashboard dengan session
+        return redirect()->route('petugas.home')->with('jimpitan_success', [
+            'warga' => $warga->nama_kk,
+            'tanggal' => $tanggalFormatted,
+            'jumlah' => $jumlahFormatted,
+            'wa_url' => $waUrl, // ini untuk tombol WA di alert
+        ]);
     }
+
 
     public function riwayat()
     {

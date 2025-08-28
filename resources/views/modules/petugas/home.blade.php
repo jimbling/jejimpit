@@ -4,31 +4,38 @@
     <div class="p-4 space-y-4">
         {{-- Modern alert sukses entri jimpitan --}}
         @if (session('jimpitan_success'))
-            @php
-                $data = session('jimpitan_success');
-            @endphp
+            @php $data = session('jimpitan_success'); @endphp
             <div id="alert-jimpitan"
-                class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 border-green-500 shadow-lg rounded-lg px-5 py-4 flex items-start space-x-3 w-[calc(100%-2rem)] max-w-md animate-slide-down z-50">
-                <div class="flex-shrink-0">
+                class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 border-green-500 shadow-lg rounded-lg px-5 py-4 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-md animate-slide-down z-50">
+                <div class="flex items-start gap-3">
                     <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
+                    <div class="flex-1 text-sm text-gray-700">
+                        <strong class="font-semibold">Berhasil!</strong>
+                        <p class="mt-1">
+                            Jimpitan dari Bapak/Ibu <strong>{{ $data['warga'] }}</strong> telah dientri sebesar
+                            <strong>Rp {{ $data['jumlah'] }}</strong> pada tanggal
+                            <strong>{{ $data['tanggal'] }}</strong>.
+                        </p>
+                    </div>
+                    <button onclick="document.getElementById('alert-jimpitan').remove()"
+                        class="ml-3 text-gray-400 hover:text-gray-600 flex-shrink-0">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="flex-1 text-sm text-gray-700">
-                    <strong class="font-semibold">Berhasil!</strong>
-                    <p class="mt-1">
-                        Jimpitan dari Bapak/Ibu <strong>{{ $data['warga'] }}</strong> telah dientri sebesar
-                        <strong>Rp {{ number_format($data['jumlah'], 0, ',', '.') }}</strong> pada tanggal
-                        <strong>{{ \Carbon\Carbon::parse($data['tanggal'])->translatedFormat('d M Y') }}</strong>.
-                    </p>
-                </div>
-                <button onclick="document.getElementById('alert-jimpitan').remove()"
-                    class="ml-3 text-gray-400 hover:text-gray-600 flex-shrink-0">
-                    <i class="fas fa-times"></i>
-                </button>
+
+                {{-- Tombol WA --}}
+                @if (isset($data['wa_url']))
+                    <a href="{{ $data['wa_url'] }}" target="_blank"
+                        class="mt-2 inline-flex items-center px-3 py-1.5 bg-green-500 text-white rounded hover:bg-green-600 text-sm font-medium">
+                        Kirim WhatsApp
+                    </a>
+                @endif
             </div>
         @endif
+
 
         <!-- Header sapaan -->
         <div>

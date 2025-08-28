@@ -136,8 +136,8 @@
 
                 @role('super-admin|user')
                     <li
-                        class="nav-item dropdown {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}">
-                        <a class="nav-link dropdown-toggle {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index']) }}"
+                        class="nav-item dropdown {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index', 'laporan.index', 'laporan.partisipasi.index']) }}">
+                        <a class="nav-link dropdown-toggle {{ isActiveParent(['induk.*', 'kehadiran.index', 'transaksi.jimpitan.index', 'penerimaan.index', 'pengeluaran.index', 'bku.lengkap.index', 'laporan.index', 'laporan.partisipasi.index']) }}"
                             href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"
                             data-bs-auto-close="outside">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -164,6 +164,7 @@
                             <a class="dropdown-item {{ isActiveRoute('induk.warga') }}" href="{{ route('induk.warga') }}">
                                 Data Warga
                             </a>
+
 
                             <!-- Submenu Petugas -->
                             <div class="dropend">
@@ -208,6 +209,15 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <a class="dropdown-item {{ isActiveRoute('laporan.index') }}"
+                                href="{{ route('laporan.index') }}">
+                                Laporan
+                            </a>
+                            <a class="dropdown-item {{ isActiveRoute('laporan.partisipasi.index') }}"
+                                href="{{ route('laporan.partisipasi.index') }}">
+                                Partisipasi Warga
+                            </a>
                         </div>
                     </li>
                 @endrole

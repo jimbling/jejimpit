@@ -30,23 +30,23 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Nama Sekolah</label>
-                                <input type="text" class="form-control" name="nama_sekolah"
-                                    value="{{ $setting->nama_sekolah }}" disabled>
+                                <label class="form-label required">Nama Dusun</label>
+                                <input type="text" class="form-control" name="nama_dusun"
+                                    value="{{ $setting->nama_dusun }}" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">NPSN</label>
-                                <input type="text" class="form-control" name="npsn" value="{{ $setting->npsn }}"
+                                <label class="form-label required">Nama RT</label>
+                                <input type="text" class="form-control" name="nama_rt" value="{{ $setting->nama_rt }}"
                                     disabled>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required">Alamat Lengkap</label>
-                        <textarea class="form-control" name="alamat_lengkap" rows="2" disabled>{{ $setting->alamat_lengkap }}</textarea>
+                        <label class="form-label required">Nama Koordinator</label>
+                        <textarea class="form-control" name="nama_koordinator" rows="2" disabled>{{ $setting->nama_koordinator }}</textarea>
                     </div>
 
                     <div class="row">
@@ -120,52 +120,7 @@
                             disabled>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Kepala Sekolah</label>
-                                <input type="text" class="form-control" name="kepala_sekolah"
-                                    value="{{ $setting->kepala_sekolah }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">NIP Kepala Sekolah</label>
-                                <input type="text" class="form-control" name="nip_kepala_sekolah"
-                                    value="{{ $setting->nip_kepala_sekolah }}" disabled>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Tahun Berdiri</label>
-                                <input type="text" class="form-control" name="tahun_berdiri"
-                                    value="{{ $setting->tahun_berdiri }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Jenjang Pendidikan</label>
-                                <input type="text" class="form-control" name="jenjang_pendidikan"
-                                    value="{{ $setting->jenjang_pendidikan }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Status Sekolah</label>
-                                <input type="text" class="form-control" name="status_sekolah"
-                                    value="{{ $setting->status_sekolah }}" disabled>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Kurikulum Berlaku</label>
-                        <input type="text" class="form-control" name="kurikulum_berlaku"
-                            value="{{ $setting->kurikulum_berlaku }}" disabled>
-                    </div>
 
                     <div class="hr-text hr-text-left">Media Sekolah</div>
 
@@ -174,7 +129,7 @@
                         <div class="col-lg-4 mb-4">
                             <div class="card card-sm">
                                 <div class="card-body">
-                                    <h3 class="card-title">Logo Sekolah</h3>
+                                    <h3 class="card-title">Logo Pedukuhan</h3>
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex align-items-center justify-content-center"
                                             style="min-height: 120px;">
@@ -411,7 +366,7 @@
                         <div class="col-12 mb-4">
                             <div class="card card-sm">
                                 <div class="card-body">
-                                    <h3 class="card-title">Kop Sekolah</h3>
+                                    <h3 class="card-title">Kop Pedukuhan</h3>
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex align-items-center justify-content-center"
                                             style="min-height: 120px;">

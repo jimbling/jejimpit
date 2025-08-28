@@ -11,15 +11,24 @@ use App\Models\TransaksiJimpitan;
 use App\Models\penerimaanMingguan;
 use App\Http\Controllers\Controller;
 use App\Models\PengeluaranJimpitan;
+use App\Services\Jimpitan\PenerimaanService;
 
 class PenerimaanController extends Controller
 {
+
+    protected $penerimaanService;
+
+    public function __construct(PenerimaanService $penerimaanService)
+    {
+        $this->penerimaanService = $penerimaanService;
+    }
+
     public function index(Request $request)
     {
         $bulan = $request->input('bulan', now()->month);
         $tahun = $request->input('tahun', now()->year);
 
-        $penerimaanMingguan = penerimaanMingguan::where('bulan', $bulan)
+        $penerimaanMingguan = PenerimaanMingguan::where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->orderBy('minggu')
             ->get();
@@ -28,8 +37,16 @@ class PenerimaanController extends Controller
             ->where('tahun', $tahun)
             ->first();
 
-        return view('modules.jimpitan.penerimaan', compact('penerimaanMingguan', 'penerimaanBulanan', 'bulan', 'tahun'));
+        return view('modules.jimpitan.penerimaan', [
+            'title' => 'Data Penerimaan Jimpitan',
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'penerimaanMingguan' => $penerimaanMingguan,
+            'penerimaanBulanan' => $penerimaanBulanan,
+            'breadcrumbs' => $this->penerimaanService->getBreadcrumbs(),
+        ]);
     }
+
 
     public function generateMingguan(Request $request)
     {

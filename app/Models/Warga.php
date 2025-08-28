@@ -47,4 +47,9 @@ class Warga extends Model
     {
         return $this->hasMany(TransaksiJimpitan::class, 'warga_id');
     }
+
+    public function transaksis()
+    {
+        return $this->hasMany(\App\Models\TransaksiJimpitan::class, 'warga_id');
+    }
 }

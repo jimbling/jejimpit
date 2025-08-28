@@ -4,18 +4,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Modules\Warga\WargaController;
 use App\Http\Controllers\Modules\Jimpitan\BkuController;
 use App\Http\Controllers\Modules\Admin\DashboardController;
+use App\Http\Controllers\Modules\Laporan\LaporanController;
 use App\Http\Controllers\Modules\Jimpitan\PetugasController;
 use App\Http\Controllers\Modules\Pengaturan\AksesController;
 use App\Http\Controllers\Modules\Pengaturan\SistemController;
 use App\Http\Controllers\Modules\Jimpitan\KehadiranController;
 use App\Http\Controllers\Modules\Jimpitan\BkuLengkapController;
 use App\Http\Controllers\Modules\Jimpitan\PenerimaanController;
+use App\Http\Controllers\Modules\Jimpitan\PartisipasiController;
 use App\Http\Controllers\Modules\Jimpitan\PengeluaranController;
 use App\Http\Controllers\Modules\Pengaturan\PembaruanController;
 use App\Http\Controllers\Modules\Pengaturan\PengaturanController;
 use App\Http\Controllers\Modules\Pengaturan\GoogleDriveController;
 use App\Http\Controllers\Modules\Pengaturan\PemeliharaanController;
 use App\Http\Controllers\Modules\Jimpitan\TransaksiJimpitanController;
+use App\Http\Controllers\PartisipasiController as ControllersPartisipasiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -197,6 +200,44 @@ Route::middleware(['auth', 'verified', 'can:atur bku'])
         Route::get('/lengkap', [BkuLengkapController::class, 'index'])->name('lengkap.index');
         Route::post('/lengkap/generate', [BkuLengkapController::class, 'generate'])->name('lengkap.generate');
     });
+
+Route::prefix('laporan')->name('laporan.')->group(function () {
+    Route::get('/', [LaporanController::class, 'index'])->name('index');
+    Route::get('penerimaan-mingguan', [LaporanController::class, 'penerimaanMingguanPreview'])->name('penerimaan-mingguan.preview');
+    Route::get('penerimaan-mingguan/pdf', [LaporanController::class, 'penerimaanMingguanPdf'])->name('penerimaan-mingguan.pdf');
+    Route::get('penerimaan-mingguan/json', [LaporanController::class, 'penerimaanMingguanJson'])->name('penerimaan-mingguan.json');
+    Route::get('/penerimaan-mingguan/cetak', [LaporanController::class, 'cetakMingguan'])->name('laporan.cetak-mingguan');
+});
+
+Route::prefix('laporan')->group(function () {
+    Route::get('/bku-bulanan', [LaporanController::class, 'bkuBulananIndex'])->name('laporan.bku_bulanan.index');
+    Route::get('/bku-bulanan/json', [LaporanController::class, 'bkuBulananJson'])->name('laporan.bku_bulanan.json');
+    Route::get('/bku-bulanan/cetak', [LaporanController::class, 'bkuBulananCetak'])->name('laporan.bku_bulanan.cetak');
+});
+
+Route::prefix('laporan')->group(function () {
+    Route::get('/pengeluaran', [LaporanController::class, 'pengeluaran'])->name('laporan.pengeluaran');
+    Route::get('/pengeluaran/json', [LaporanController::class, 'pengeluaranJson'])->name('laporan.pengeluaran.json');
+    Route::get('/pengeluaran/cetak', [LaporanController::class, 'pengeluaranCetak'])->name('laporan.pengeluaran.cetak');
+});
+
+Route::prefix('laporan')->middleware(['auth'])->group(function () {
+    Route::get('partisipasi', [PartisipasiController::class, 'index'])
+        ->name('laporan.partisipasi.index');
+
+    Route::get('/partisipasi/warga/{id}', [PartisipasiController::class, 'showWarga'])
+        ->name('laporan.partisipasi.warga.show');
+
+    Route::get(
+        '/partisipasi/warga/{id}/transaksi',
+        [PartisipasiController::class, 'getTransaksiByDate']
+    )->name('laporan.partisipasi.warga.transaksi');
+    Route::get('/partisipasi/{id}/print', [PartisipasiController::class, 'print'])->name('partisipasi.print');
+    Route::get('/partisipasi/{id}/transaksi', [PartisipasiController::class, 'getTransaksi'])
+        ->name('laporan.partisipasi.warga.transaksi');
+});
+
+
 
 
 require __DIR__ . '/auth.php';

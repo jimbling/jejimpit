@@ -42,17 +42,25 @@ class TransaksiJimpitanController extends Controller
 
         $transaksi = $query->get();
 
-
         // Jika request AJAX, kirim partial table saja
         if ($request->ajax()) {
-            return view('modules.jimpitan.transaksi.table', compact('transaksi'))->render();
+            return view('modules.jimpitan.transaksi.table', [
+                'transaksi' => $transaksi,
+            ])->render();
         }
 
         $wargas = \App\Models\Warga::where('status', 'aktif')->orderBy('nama_kk')->get();
         $users  = \App\Models\User::orderBy('name')->get();
 
-        return view('modules.jimpitan.transaksi', compact('transaksi', 'wargas', 'users'));
+        return view('modules.jimpitan.transaksi', [
+            'title'       => 'Data Transaksi Jimpitan',
+            'transaksi'   => $transaksi,
+            'wargas'      => $wargas,
+            'users'       => $users,
+            'breadcrumbs' => $this->transaksiService->getBreadcrumbs(),
+        ]);
     }
+
 
 
 
