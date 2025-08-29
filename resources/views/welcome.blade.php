@@ -488,7 +488,7 @@
                 let bulan = document.getElementById("bulan").value;
                 let tahun = document.getElementById("tahun").value;
 
-                let url = `/laporan/bku-bulanan/json?bulan=${bulan}&tahun=${tahun}`;
+                let url = `/laporan/bku/json?bulan=${bulan}&tahun=${tahun}`;
                 let res = await fetch(url);
                 let data = await res.json();
 

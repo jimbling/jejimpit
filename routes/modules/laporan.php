@@ -38,3 +38,5 @@ Route::prefix('laporan')
             Route::get('/{id}/transaksi', [PartisipasiController::class, 'getTransaksi'])->name('partisipasi.warga.transaksi.detail');
         });
     });
+
+Route::get('/laporan/bku/json', [LaporanController::class, 'bkuBulananJson'])->name('laporan.bku.public');
