@@ -16,13 +16,13 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil seeder untuk role dan permission
         $this->call([
-            // RoleSeeder::class,
-            // PermissionSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
             WargaSeeder::class,
-            // PermissionSeeder::class,
-            // RoleSeeder::class,
-            // SuperAdminSeeder::class,
-            // UserSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            SuperAdminSeeder::class,
+            UserSeeder::class,
         ]);
         // Pastikan user admin ada
         $user = User::first();

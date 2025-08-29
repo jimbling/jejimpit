@@ -387,6 +387,145 @@
         </div>
     </section>
 
+    <!-- Laporan BKU Section -->
+    <section id="laporan-bku" class="py-6 py-lg-8 bg-light">
+        <div class="container">
+            <div class="row align-items-start">
+                <div class="col-lg-6">
+                    <span class="badge bg-success-lt text-success mb-3">Laporan</span>
+                    <h2 class="display-6 fw-bold mb-4">Laporan BKU Bulanan</h2>
+                    <p class="text-muted lead mb-4">
+                        Data keuangan jimpitan warga RT 63 Kedungtangkil, ditampilkan secara interaktif dan diperbarui
+                        secara realtime.
+                    </p>
+
+                    <!-- Filter -->
+                    <div class="d-flex gap-2 mb-4">
+                        <select id="bulan" class="form-select w-auto">
+                            @foreach (range(1, 12) as $b)
+                                <option value="{{ $b }}" {{ $b == date('n') ? 'selected' : '' }}>
+                                    {{ DateTime::createFromFormat('!m', $b)->format('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select id="tahun" class="form-select w-auto">
+                            @foreach (range(2023, date('Y') + 1) as $t)
+                                <option value="{{ $t }}" {{ $t == date('Y') ? 'selected' : '' }}>
+                                    {{ $t }}</option>
+                            @endforeach
+                        </select>
+                        <button onclick="loadBku()" class="btn btn-success">Tampilkan</button>
+                    </div>
+
+                    <!-- Ringkasan -->
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Total Masuk</div>
+                                    <div id="total-masuk" class="fw-bold fs-5">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Total Keluar</div>
+                                    <div id="total-keluar" class="fw-bold fs-5">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Saldo Awal</div>
+                                    <div id="saldo-awal" class="fw-bold fs-5">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Saldo Akhir</div>
+                                    <div id="saldo-akhir" class="fw-bold fs-5">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom kanan tabel -->
+                <div class="col-lg-6 mt-4 mt-lg-0">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-success text-white">Detail Transaksi</div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Uraian</th>
+                                            <th class="text-end">Masuk</th>
+                                            <th class="text-end">Keluar</th>
+                                            <th class="text-end">Saldo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bku-items">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Memuat data...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            async function loadBku() {
+                let bulan = document.getElementById("bulan").value;
+                let tahun = document.getElementById("tahun").value;
+
+                let url = `/laporan/bku-bulanan/json?bulan=${bulan}&tahun=${tahun}`;
+                let res = await fetch(url);
+                let data = await res.json();
+
+                // update ringkasan
+                document.getElementById("total-masuk").innerText = data.total_masuk;
+                document.getElementById("total-keluar").innerText = data.total_keluar;
+                document.getElementById("saldo-awal").innerText = data.saldo_awal;
+                document.getElementById("saldo-akhir").innerText = data.saldo_akhir;
+
+                // update tabel
+                let tbody = document.getElementById("bku-items");
+                tbody.innerHTML = "";
+                if (data.items.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Tidak ada data</td></tr>`;
+                } else {
+                    data.items.forEach(item => {
+                        tbody.innerHTML += `
+                    <tr>
+                        <td>${item.tanggal ?? '-'}</td>
+                        <td>${item.uraian ?? '-'}</td>
+                        <td class="text-end">${item.masuk ?? 0}</td>
+                        <td class="text-end">${item.keluar ?? 0}</td>
+                        <td class="text-end">${item.saldo ?? 0}</td>
+                    </tr>
+                `;
+                    });
+                }
+            }
+
+            // load pertama kali
+            loadBku();
+
+            // auto refresh tiap 15 detik
+            setInterval(loadBku, 15000);
+        </script>
+    </section>
+
 
     <!-- About Section -->
     <section id="about" class="py-6 py-lg-8 bg-body">

@@ -36,7 +36,7 @@ class WargaSeeder extends Seeder
             ['nama_kk' => 'Giwarno', 'no_telp' => '083836565328'],
             ['nama_kk' => 'Sujianto', 'no_telp' => '081339807194'],
             ['nama_kk' => 'Sukidal', 'no_telp' => '082135430783'],
-            ['nama_kk' => 'Kaminm', 'no_telp' => '085721501771'],
+            ['nama_kk' => 'Kaminem', 'no_telp' => '085721501771'],
             ['nama_kk' => 'Tuhardi', 'no_telp' => '08311845171'],
             ['nama_kk' => 'Suginem', 'no_telp' => '089652379567'],
             ['nama_kk' => 'Sugiyo', 'no_telp' => '088980875081'],

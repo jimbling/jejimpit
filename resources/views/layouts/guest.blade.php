@@ -33,13 +33,20 @@
 <body class="antialiased">
     <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 pt-6">
         <div class="text-center mb-4">
-            <!-- BEGIN NAVBAR LOGO -->
-            <a href=".">
+            <a href="." class="d-flex align-items-center justify-content-center gap-3">
+                {{-- Logo kiri --}}
                 <img src="{{ asset('storage/' . system_setting('logo')) }}" alt="Logo"
                     style="height: 100px; width: auto;">
 
+                {{-- Gambar kop sekolah kanan --}}
+                @if (system_setting('kop_sekolah'))
+                    <img src="{{ asset('storage/' . system_setting('kop_sekolah')) }}" alt="Kop Sekolah"
+                        style="height: 100px; width: auto;">
+                @endif
             </a>
         </div>
+
+
 
 
         <div class="w-100 shadow-md overflow-hidden rounded">
