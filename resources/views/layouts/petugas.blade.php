@@ -34,14 +34,8 @@
     <!-- Header -->
     <header class="bg-blue-200 text-gray-800 p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center flex-wrap">
-            <!-- Teks Selamat Datang -->
-            <div>
-                <h1 class="text-xl font-bold">Selamat Datang</h1>
-                <p class="text-sm">{{ Auth::user()->name }}</p>
-            </div>
-
-            <!-- Logo Kanan -->
-            <div class="flex items-center gap-4 mt-2 sm:mt-0">
+            <!-- Logo Kiri -->
+            <div class="flex items-center gap-4">
                 @if (system_setting('logo'))
                     <img src="{{ asset('storage/' . system_setting('logo')) }}" alt="Logo"
                         class="h-12 w-auto object-contain">
@@ -51,29 +45,30 @@
                     <img src="{{ asset('storage/' . system_setting('kop_sekolah')) }}" alt="Kop Sekolah"
                         class="h-12 w-auto object-contain">
                 @endif
+            </div>
 
-                <!-- User Menu -->
-                <div class="relative">
-                    <button id="userMenuBtn"
-                        class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center focus:outline-none ml-2">
-                        <i class="fas fa-user"></i>
-                    </button>
+            <!-- User Menu Kanan -->
+            <div class="relative">
+                <button id="userMenuBtn"
+                    class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center focus:outline-none">
+                    <i class="fas fa-user"></i>
+                </button>
 
-                    <div id="userDropdown"
-                        class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg py-2 hidden z-50">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Keluar</span>
-                            </button>
-                        </form>
-                    </div>
+                <div id="userDropdown"
+                    class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg py-2 hidden z-50">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Keluar</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </header>
+
 
 
     <!-- Main Content -->
