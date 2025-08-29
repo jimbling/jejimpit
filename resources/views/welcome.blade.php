@@ -484,46 +484,64 @@
         </div>
 
         <script>
+            // Fungsi format angka ribuan
+            function formatNumber(num) {
+                return new Intl.NumberFormat('id-ID').format(num);
+            }
+
+            // Fungsi load BKU
             async function loadBku() {
                 let bulan = document.getElementById("bulan").value;
                 let tahun = document.getElementById("tahun").value;
 
                 let url = `/laporan/bku/json?bulan=${bulan}&tahun=${tahun}`;
-                let res = await fetch(url);
-                let data = await res.json();
 
-                // update ringkasan
-                document.getElementById("total-masuk").innerText = data.total_masuk;
-                document.getElementById("total-keluar").innerText = data.total_keluar;
-                document.getElementById("saldo-awal").innerText = data.saldo_awal;
-                document.getElementById("saldo-akhir").innerText = data.saldo_akhir;
+                try {
+                    let res = await fetch(url);
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    let data = await res.json();
 
-                // update tabel
-                let tbody = document.getElementById("bku-items");
-                tbody.innerHTML = "";
-                if (data.items.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Tidak ada data</td></tr>`;
-                } else {
-                    data.items.forEach(item => {
-                        tbody.innerHTML += `
-                    <tr>
-                        <td>${item.tanggal ?? '-'}</td>
-                        <td>${item.uraian ?? '-'}</td>
-                        <td class="text-end">${item.masuk ?? 0}</td>
-                        <td class="text-end">${item.keluar ?? 0}</td>
-                        <td class="text-end">${item.saldo ?? 0}</td>
-                    </tr>
-                `;
-                    });
+                    // Update ringkasan
+                    document.getElementById("total-masuk").innerText = formatNumber(data.total_masuk ?? 0);
+                    document.getElementById("total-keluar").innerText = formatNumber(data.total_keluar ?? 0);
+                    document.getElementById("saldo-awal").innerText = formatNumber(data.saldo_awal ?? 0);
+                    document.getElementById("saldo-akhir").innerText = formatNumber(data.saldo_akhir ?? 0);
+
+                    // Update tabel
+                    let tbody = document.getElementById("bku-items");
+                    tbody.innerHTML = "";
+
+                    if (!data.items || data.items.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Tidak ada data</td></tr>`;
+                    } else {
+                        data.items.forEach(item => {
+                            let tanggal = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID') : '-';
+                            tbody.innerHTML += `
+                        <tr>
+                            <td>${tanggal}</td>
+                            <td>${item.uraian ?? '-'}</td>
+                            <td class="text-end">${formatNumber(item.dana_masuk ?? 0)}</td>
+                            <td class="text-end">${formatNumber(item.dana_keluar ?? 0)}</td>
+                            <td class="text-end">${formatNumber(item.saldo ?? 0)}</td>
+                        </tr>
+                    `;
+                        });
+                    }
+
+                } catch (err) {
+                    console.error("Gagal load data BKU:", err);
+                    let tbody = document.getElementById("bku-items");
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Gagal memuat data</td></tr>`;
                 }
             }
 
-            // load pertama kali
+            // Load pertama kali
             loadBku();
 
-            // auto refresh tiap 15 detik
+            // Auto refresh tiap 15 detik
             setInterval(loadBku, 15000);
         </script>
+
     </section>
 
 
