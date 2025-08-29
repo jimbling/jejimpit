@@ -153,6 +153,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="#laporan-bku">
+                                <span class="nav-link-title">Laporan</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#about">
                                 <span class="nav-link-title">Tentang</span>
                             </a>

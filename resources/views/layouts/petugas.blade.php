@@ -32,34 +32,49 @@
     <div id="toast-container" class="fixed top-5 right-5 flex flex-col gap-3 z-50"></div>
 
     <!-- Header -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
+    <header class="bg-blue-200 text-gray-800 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center flex-wrap">
+            <!-- Teks Selamat Datang -->
             <div>
                 <h1 class="text-xl font-bold">Selamat Datang</h1>
                 <p class="text-sm">{{ Auth::user()->name }}</p>
             </div>
-            <div class="relative">
-                <!-- Icon User -->
-                <button id="userMenuBtn"
-                    class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center focus:outline-none">
-                    <i class="fas fa-user"></i>
-                </button>
 
-                <!-- Dropdown Menu -->
-                <div id="userDropdown"
-                    class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg py-2 hidden z-50">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Keluar</span>
-                        </button>
-                    </form>
+            <!-- Logo Kanan -->
+            <div class="flex items-center gap-4 mt-2 sm:mt-0">
+                @if (system_setting('logo'))
+                    <img src="{{ asset('storage/' . system_setting('logo')) }}" alt="Logo"
+                        class="h-12 w-auto object-contain">
+                @endif
+
+                @if (system_setting('kop_sekolah'))
+                    <img src="{{ asset('storage/' . system_setting('kop_sekolah')) }}" alt="Kop Sekolah"
+                        class="h-12 w-auto object-contain">
+                @endif
+
+                <!-- User Menu -->
+                <div class="relative">
+                    <button id="userMenuBtn"
+                        class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center focus:outline-none ml-2">
+                        <i class="fas fa-user"></i>
+                    </button>
+
+                    <div id="userDropdown"
+                        class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg py-2 hidden z-50">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Keluar</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+
 
     <!-- Main Content -->
     <main class="container mx-auto p-4 mb-20">
