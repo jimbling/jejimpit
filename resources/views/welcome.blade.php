@@ -577,18 +577,22 @@
             <div class="row text-center align-items-center flex-row-reverse">
                 <div class="col-lg-auto ms-lg-auto">
                     <ul class="list-inline list-inline-dots mb-0">
-                        <li class="list-inline-item"><a href="#stats" class="link-secondary">Statistik</a></li>
-                        <li class="list-inline-item"><a href="#leaders" class="link-secondary">Peringkat</a></li>
-                        <li class="list-inline-item"><a href="#about" class="link-secondary">Tentang</a></li>
-                        <li class="list-inline-item"><a href="#contact" class="link-secondary">Kontak</a></li>
+                        <li class="list-inline-item">
+                            <a href="https://sinaucms.web.id" target="_blank" class="link-secondary">
+                                Dibuat dengan <span class="text-danger">❤️</span> oleh Mas Boe - Sinau CMS
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-                    <p class="text-muted mb-0">Copyright © 2023 Jimpitan63. All rights reserved.</p>
+                    <p class="text-muted mb-0">
+                        Copyright © 2025 - {{ date('Y') }} Jimpitan63. All rights reserved.
+                    </p>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <!-- Tabler Core JS -->
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
