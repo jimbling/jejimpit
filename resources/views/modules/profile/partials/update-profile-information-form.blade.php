@@ -33,36 +33,7 @@
         </div>
     </div>
 
-    <!-- Modal for uploading avatar -->
-    <div class="modal fade" id="uploadAvatarModal" tabindex="-1" aria-labelledby="uploadAvatarModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadAvatarModalLabel">Unggah Avatar Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form for uploading avatar -->
-                    <form method="POST" action="{{ route('profile.update-avatar') }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="avatar" class="form-label">Pilih Avatar</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*"
-                                required>
-                            @error('avatar')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Unggah</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <form method="post" action="{{ route('profile.update') }}" class="mt-4">
         @csrf

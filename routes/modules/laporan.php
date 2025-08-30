@@ -36,6 +36,8 @@ Route::prefix('laporan')
             Route::get('/warga/{id}/transaksi', [PartisipasiController::class, 'getTransaksiByDate'])->name('partisipasi.warga.transaksi');
             Route::get('/{id}/print', [PartisipasiController::class, 'print'])->name('partisipasi.print');
             Route::get('/{id}/transaksi', [PartisipasiController::class, 'getTransaksi'])->name('partisipasi.warga.transaksi.detail');
+            // ✅ route send-wa taruh di sini
+            Route::get('/{id}/send-wa', [PartisipasiController::class, 'sendWa'])->name('partisipasi.send-wa');
         });
     });
 

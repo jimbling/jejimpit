@@ -19,10 +19,12 @@ class WhatsappService
 
         $message = "Halo Bapak/Ibu *{$warga->nama_kk}*,\n\n"
             . "Jimpitan Anda sebesar *Rp {$jumlahFormatted}* pada tanggal *{$tanggalFormatted}* "
-            . "telah dicatat oleh petugas *{$petugas}*.\n\n"
+            . "telah diambil dicatat oleh petugas *{$petugas}*.\n\n"
             . "Terima kasih atas partisipasi dan kontribusi Anda! \n\n"
             . "Anda dapat mengecek seluruh data transaksi jimpitan di:\n"
-            . "*https://jimpitan.remaked.web.id*";
+            . "*https://jimpitan.remaked.web.id*\n\n"
+            . "Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, "
+            . "tidak perlu membalasnya. Terima kasih";
 
         $nomor = preg_replace('/^0/', '62', $warga->no_telp);
         $waUrl = "https://wa.me/{$nomor}?text=" . urlencode($message);

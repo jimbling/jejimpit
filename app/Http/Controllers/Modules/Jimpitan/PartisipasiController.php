@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Modules\Jimpitan;
 
-use App\Http\Controllers\Controller;
-use App\Services\Jimpitan\PartisipasiService;
-use App\Models\TransaksiJimpitan;
 use Illuminate\Http\Request;
+use App\Models\TransaksiJimpitan;
+use App\Http\Controllers\Controller;
+use App\Services\Jimpitan\WhatsappService;
+use App\Services\Jimpitan\PartisipasiService;
 
 class PartisipasiController extends Controller
 {
@@ -104,5 +105,45 @@ class PartisipasiController extends Controller
             'end'        => $end,
             'title'      => 'Laporan Partisipasi Jimpitan',
         ]);
+    }
+
+    public function sendWa($id)
+    {
+        $start = request()->query('start');
+        $end   = request()->query('end');
+
+        $warga = $this->partisipasiService->getDetailWargaWithFilter($id, $start, $end);
+
+        $transaksi = $warga->transaksiJimpitan()
+            ->when($start && $end, function ($query) use ($start, $end) {
+                $query->whereBetween('tanggal', [$start, $end]);
+            })
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        $total = $transaksi->sum('jumlah');
+
+        $pesan = "*LAPORAN PARTISIPASI JIMPITAN 63* \n"
+            . "Nama: {$warga->nama_kk}\n"
+            . "Periode: {$start} s/d {$end}\n\n";
+
+        foreach ($transaksi as $trx) {
+            $tanggal = \Carbon\Carbon::parse($trx->tanggal)->translatedFormat('d F Y');
+            $pesan .= "- {$tanggal} : Rp " . number_format($trx->jumlah, 0, ',', '.') . "\n";
+        }
+
+        $totalFormatted = number_format($total, 0, ',', '.');
+        $pesan .= "\nTotal: Rp {$totalFormatted}\n\n";
+        // Tambahkan pesan informasi
+        $pesan .= "Anda dapat mengecek seluruh data transaksi jimpitan di:\n";
+        $pesan .= "*https://jimpitan.remaked.web.id*\n\n";
+        $pesan .= "Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, "
+            . "tidak perlu membalasnya. Terima kasih";
+        // Format no hp (pastikan di DB sudah 628xx bukan 08xx)
+        $phone = $warga->no_hp;
+
+        $url = "https://wa.me/{$phone}?text=" . urlencode($pesan);
+
+        return redirect($url);
     }
 }
