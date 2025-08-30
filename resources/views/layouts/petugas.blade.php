@@ -25,6 +25,14 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+    @if (system_setting('favicon'))
+        <link rel="icon" href="{{ asset('storage/' . system_setting('favicon')) }}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ asset('storage/' . system_setting('favicon')) }}" type="image/x-icon">
+    @else
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    @endif
+
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -159,7 +167,8 @@
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             <path
                                 d="M12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
                         </svg>
                     </div>
                     <span class="nav-label text-xs font-medium">Profil</span>

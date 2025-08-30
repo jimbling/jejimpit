@@ -162,11 +162,7 @@
                                 <span class="nav-link-title">Tentang</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contact">
-                                <span class="nav-link-title">Kontak</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
             </div>

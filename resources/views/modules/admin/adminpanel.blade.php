@@ -1,8 +1,8 @@
 @extends('layouts.tabler')
 
-@section('title', 'Dashboard Buku Induk Siswa')
+@section('title', 'Dashboard Pengelolaan Jimpitan')
 
-@section('page-title', 'Selamat Datang di Sistem Buku Induk Siswa')
+@section('page-title', 'Selamat Datang di Sistem Kelola Jimpitan')
 
 @section('content')
     <div class="container-fluid">
@@ -301,15 +301,16 @@
                         <div class="list-group list-group-flush list-group-condensed">
                             <div class="list-group-item px-0 py-1">
                                 <div class="row align-items-center">
-                                    <div class="col-auto text-muted">Nama Sekolah</div>
+                                    <div class="col-auto text-muted">Nama Dusun</div>
                                     <div class="col text-end font-weight-medium text-truncate">
-                                        {{ system_setting('nama_sekolah') }}</div>
+                                        {{ system_setting('nama_dusun') }}</div>
                                 </div>
                             </div>
                             <div class="list-group-item px-0 py-1">
                                 <div class="row align-items-center">
-                                    <div class="col-auto text-muted">NPSN</div>
-                                    <div class="col text-end font-weight-medium"> {{ system_setting('npsn') }}</div>
+                                    <div class="col-auto text-muted">Desa</div>
+                                    <div class="col text-end font-weight-medium">
+                                        {{ system_setting('desa_kelurahan') }}, {{ system_setting('kecamatan') }}</div>
                                 </div>
                             </div>
                             <div class="list-group-item px-0 py-1">
@@ -317,7 +318,7 @@
                                     <div class="col-auto text-muted ">Versi Aplikasi
                                     </div>
                                     <div class="col text-end d-flex justify-content-end align-items-center gap-2">
-                                        <span class="font-weight-medium">3.2.1
+                                        <span class="font-weight-medium">1.0.0
 
                                         </span>
 

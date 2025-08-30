@@ -54,28 +54,38 @@ class PenerimaanController extends Controller
         $tahun = $request->input('tahun', now()->year);
 
         // Hapus yang belum locked
-        penerimaanMingguan::where('bulan', $bulan)->where('tahun', $tahun)->where('locked', false)->delete();
+        penerimaanMingguan::where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->where('locked', false)
+            ->delete();
 
-        // Hitung minggu dalam bulan
         $carbon = Carbon::create($tahun, $bulan, 1);
-        $totalMinggu = $carbon->daysInMonth / 7;
+        $daysInMonth = $carbon->daysInMonth;
 
-        for ($i = 1; $i <= ceil($totalMinggu); $i++) {
-            $start = $carbon->copy()->startOfMonth()->addWeeks($i - 1);
-            $end = $start->copy()->endOfWeek();
+        $minggu = 1;
+        $startDay = 1;
+
+        while ($startDay <= $daysInMonth) {
+            $endDay = min($startDay + 6, $daysInMonth); // kelompok per 7 hari
+            $start = Carbon::create($tahun, $bulan, $startDay)->startOfDay();
+            $end   = Carbon::create($tahun, $bulan, $endDay)->endOfDay();
 
             $total = TransaksiJimpitan::whereBetween('tanggal', [$start, $end])->sum('jumlah');
 
             penerimaanMingguan::create([
-                'minggu' => $i,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'total' => $total,
+                'minggu' => $minggu,
+                'bulan'  => $bulan,
+                'tahun'  => $tahun,
+                'total'  => $total,
             ]);
+
+            $minggu++;
+            $startDay += 7;
         }
 
         return redirect()->back()->with('success', 'Penerimaan Mingguan berhasil digenerate');
     }
+
 
     public function generateBulanan(Request $request)
     {

@@ -14,7 +14,7 @@
                 @endfor
             </select>
             <select name="tahun" class="form-select">
-                @for ($y = now()->year; $y >= now()->year - 5; $y--)
+                @for ($y = now()->year; $y >= now()->year - 1; $y--)
                     <option value="{{ $y }}" {{ $selected_tahun == $y ? 'selected' : '' }}>
                         {{ $y }}
                     </option>

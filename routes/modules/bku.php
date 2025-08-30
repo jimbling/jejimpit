@@ -9,4 +9,6 @@ Route::middleware(['auth', 'verified', 'can:atur bku'])
     ->group(function () {
         Route::get('/lengkap', [BkuLengkapController::class, 'index'])->name('lengkap.index');
         Route::post('/lengkap/generate', [BkuLengkapController::class, 'generate'])->name('lengkap.generate');
+        Route::delete('/hapus', [BkuLengkapController::class, 'hapusBku'])
+            ->name('lengkap.hapus');
     });
