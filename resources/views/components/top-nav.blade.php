@@ -10,29 +10,7 @@
 
         <div class="navbar-nav flex-row order-md-last">
 
-            {{-- <div class="nav-item d-none d-md-flex me-3">
-                <div class="btn-list">
-                    <a href="https://github.com/tabler/tabler" class="btn btn-5" target="_blank" rel="noreferrer">
-                        <!-- Download SVG icon from http://tabler.io/icons/icon/brand-github -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon icon-2">
-                            <path
-                                d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-                        </svg>
-                        Source code
-                    </a>
-                    <a href="https://github.com/sponsors/codecalm" class="btn btn-6" target="_blank" rel="noreferrer">
-                        <!-- Download SVG icon from http://tabler.io/icons/icon/heart -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon text-pink icon-2">
-                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
-                        </svg>
-                        Sponsor
-                    </a>
-                </div>
-            </div> --}}
+
             <div class="d-flex">
                 <div class="nav-item">
                     <a href="#" class="nav-link px-0 hide-theme-dark" data-theme="dark">
@@ -54,122 +32,7 @@
                     </a>
                 </div>
 
-                <div class="nav-item dropdown d-none d-md-flex me-3">
-                    <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1"
-                        aria-label="Show notifications">
-                        <!-- Download SVG icon from http://tabler.io/icons/icon/bell -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="icon icon-1">
-                            <path
-                                d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-                            <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
-                        </svg>
-                        <span class="badge bg-red"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Last updates</h3>
-                            </div>
-                            <div class="list-group list-group-flush list-group-hoverable">
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span
-                                                class="status-dot status-dot-animated bg-red d-block"></span>
-                                        </div>
-                                        <div class="col text-truncate">
-                                            <a href="#" class="text-body d-block">Example 1</a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">Change
-                                                deprecated html tags to text decoration classes (#29604)</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#" class="list-group-item-actions">
-                                                <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon text-muted icon-2">
-                                                    <path
-                                                        d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span class="status-dot d-block"></span></div>
-                                        <div class="col text-truncate">
-                                            <a href="#" class="text-body d-block">Example 2</a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">
-                                                justify-content:between ⇒ justify-content:space-between (#29734)
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#" class="list-group-item-actions show">
-                                                <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon text-yellow icon-2">
-                                                    <path
-                                                        d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span class="status-dot d-block"></span></div>
-                                        <div class="col text-truncate">
-                                            <a href="#" class="text-body d-block">Example 3</a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">Update
-                                                change-version.js (#29736)</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#" class="list-group-item-actions">
-                                                <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon text-muted icon-2">
-                                                    <path
-                                                        d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span
-                                                class="status-dot status-dot-animated bg-green d-block"></span>
-                                        </div>
-                                        <div class="col text-truncate">
-                                            <a href="#" class="text-body d-block">Example 4</a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">Regenerate
-                                                package-lock.json (#29730)</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#" class="list-group-item-actions">
-                                                <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon text-muted icon-2">
-                                                    <path
-                                                        d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
@@ -184,8 +47,8 @@
 
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <a href="/profile" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                        data-bs-target="#modal-scrollable"> Tentang Siesde </a>
+                    <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scrollable">
+                        Tentang Jimpitan 63 </a>
                     <a href="{{ route('pengaturan.lisensi') }}" class="dropdown-item">Lisensi</a>
 
                     <div class="dropdown-divider"></div>
@@ -199,7 +62,7 @@
                     </a>
                 </div>
 
-                <!-- Modal Tentang Siesde -->
+                <!-- Modal Tentang Jimpitan 63 -->
                 <div class="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog"
                     aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-2 modal-dialog-centered modal-dialog-scrollable"
@@ -345,6 +208,122 @@
             </div>
 
             <!-- Buku Induk -->
+            <!-- Jimpitan (Mobile Menu) -->
+            <div
+                class="nav-item {{ Request::is('induk/*') || Request::is('kehadiran*') || Request::is('transaksi/jimpitan*') || Request::is('penerimaan*') || Request::is('pengeluaran*') || Request::is('bku/kelengkap*') || Request::is('laporan*') ? 'active' : '' }}">
+                <a class="nav-link" href="#jimpitan-collapse" data-bs-toggle="collapse" role="button"
+                    aria-expanded="{{ Request::is('induk/*') || Request::is('kehadiran*') || Request::is('transaksi/jimpitan*') || Request::is('penerimaan*') || Request::is('pengeluaran*') || Request::is('bku/kelengkap*') || Request::is('laporan*') ? 'true' : 'false' }}"
+                    aria-controls="jimpitan-collapse">
+                    <span class="nav-link-icon me-2">
+                        <!-- Icon Buku Induk -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-address-book">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M20 6v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2z" />
+                            <path d="M10 16h6" />
+                            <path d="M13 11m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M4 8h3" />
+                            <path d="M4 12h3" />
+                            <path d="M4 16h3" />
+                        </svg>
+                    </span>
+                    <span class="nav-link-title">Jimpitan</span>
+                    <span class="nav-link-chevron">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M9 6l6 6l-6 6"></path>
+                        </svg>
+                    </span>
+                </a>
+
+                <div class="collapse {{ Request::is('induk/*') || Request::is('kehadiran*') || Request::is('transaksi/jimpitan*') || Request::is('penerimaan*') || Request::is('pengeluaran*') || Request::is('bku/kelengkap*') || Request::is('laporan*') ? 'show' : '' }}"
+                    id="jimpitan-collapse">
+                    <div class="nav flex-column ps-4">
+
+                        <a class="nav-link {{ request()->routeIs('induk.warga') ? 'active' : '' }}"
+                            href="{{ route('induk.warga') }}">
+                            Data Warga
+                        </a>
+
+                        <!-- Submenu Petugas -->
+                        <a class="nav-link d-flex justify-content-between align-items-center"
+                            data-bs-toggle="collapse" href="#petugas-collapse" role="button"
+                            aria-expanded="{{ Request::is('kehadiran*') || Request::is('transaksi/jimpitan*') ? 'true' : 'false' }}"
+                            aria-controls="petugas-collapse">
+                            <span>Petugas</span>
+                            <span class="nav-link-chevron">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="20" height="20"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M9 6l6 6l-6 6"></path>
+                                </svg>
+                            </span>
+                        </a>
+                        <div class="collapse {{ Request::is('kehadiran*') || Request::is('transaksi/jimpitan*') ? 'show' : '' }}"
+                            id="petugas-collapse">
+                            <div class="nav flex-column ps-4">
+                                <a href="{{ route('transaksi.jimpitan.index') }}"
+                                    class="nav-link {{ isActiveRoute('transaksi.jimpitan.index') }}">
+                                    Transaksi
+                                </a>
+                                <a href="{{ route('kehadiran.index') }}"
+                                    class="nav-link {{ isActiveRoute('kehadiran.index') }}">
+                                    Kehadiran
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Submenu Penatausahaan -->
+                        <a class="nav-link d-flex justify-content-between align-items-center"
+                            data-bs-toggle="collapse" href="#penatausahaan-collapse" role="button"
+                            aria-expanded="{{ Request::is('penerimaan*') || Request::is('pengeluaran*') || Request::is('bku/kelengkap*') ? 'true' : 'false' }}"
+                            aria-controls="penatausahaan-collapse">
+                            <span>Penatausahaan</span>
+                            <span class="nav-link-chevron">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="20" height="20"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M9 6l6 6l-6 6"></path>
+                                </svg>
+                            </span>
+                        </a>
+                        <div class="collapse {{ Request::is('penerimaan*') || Request::is('pengeluaran*') || Request::is('bku/kelengkap*') ? 'show' : '' }}"
+                            id="penatausahaan-collapse">
+                            <div class="nav flex-column ps-4">
+                                <a href="{{ route('penerimaan.index') }}"
+                                    class="nav-link {{ isActiveRoute('penerimaan.index') }}">
+                                    Penerimaan
+                                </a>
+                                <a href="{{ route('pengeluaran.index') }}"
+                                    class="nav-link {{ isActiveRoute('pengeluaran.index') }}">
+                                    Pengeluaran
+                                </a>
+                                <a href="{{ route('bku.lengkap.index') }}"
+                                    class="nav-link {{ isActiveRoute('bku.lengkap.index') }}">
+                                    Buku Kas Umum
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <a class="nav-link {{ isActiveRoute('laporan.index') }}"
+                            href="{{ route('laporan.index') }}">
+                            Laporan
+                        </a>
+                        <a class="nav-link {{ isActiveRoute('laporan.partisipasi.index') }}"
+                            href="{{ route('laporan.partisipasi.index') }}">
+                            Partisipasi Warga
+                        </a>
+                    </div>
+                </div>
+            </div>
 
 
             <!-- Administrator -->
