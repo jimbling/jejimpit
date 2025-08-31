@@ -190,13 +190,9 @@
                                 href="{{ route('pengaturan.pembaruan') }}">
                                 Pembaruan Aplikasi
                             </a>
-                            <a class="dropdown-item {{ request()->routeIs('pengaturan.pemeliharaan') ? 'active' : '' }}"
-                                href="{{ route('pengaturan.pemeliharaan') }}">
+                            <a class="dropdown-item {{ request()->routeIs('pengaturan.pemeliharaan.index') ? 'active' : '' }}"
+                                href="{{ route('pengaturan.pemeliharaan.index') }}">
                                 Pemeliharaan
-                            </a>
-                            <a class="dropdown-item {{ request()->routeIs('google.drive.index') ? 'active' : '' }}"
-                                href="{{ route('google.drive.index') }}">
-                                Pengaturan GDrive
                             </a>
                         </div>
                     </li>

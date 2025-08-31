@@ -21,9 +21,6 @@ Route::prefix('pengaturan')->middleware(['auth', 'verified'])->name('pengaturan.
 
     Route::get('/pembaruan', [PembaruanController::class, 'pembaruan'])
         ->can('lihat pembaruan')->name('pembaruan');
-
-    Route::get('/pemeliharaan', [PemeliharaanController::class, 'pemeliharaan'])
-        ->can('lihat pemeliharaan')->name('pemeliharaan');
 });
 
 // Profile

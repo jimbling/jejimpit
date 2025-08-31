@@ -392,8 +392,8 @@
                             href="{{ route('pengaturan.pembaruan') }}">
                             Pembaruan Aplikasi
                         </a>
-                        <a class="nav-link {{ request()->routeIs('pengaturan.pemeliharaan') ? 'active' : '' }}"
-                            href="{{ route('pengaturan.pemeliharaan') }}">
+                        <a class="nav-link {{ request()->routeIs('pengaturan.pemeliharaan.index') ? 'active' : '' }}"
+                            href="{{ route('pengaturan.pemeliharaan.index') }}">
                             Pemeliharaan
                         </a>
                         <a class="nav-link {{ request()->routeIs('google.drive.index') ? 'active' : '' }}"
