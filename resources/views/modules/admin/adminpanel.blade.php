@@ -112,17 +112,6 @@
                                 </div>
                             </div>
 
-                            <div class="list-group-item px-0 py-1">
-                                <div class="row align-items-center">
-                                    <div class="col-auto text-muted">Tahun Ajaran</div>
-                                    <div class="col text-end">
-                                        <span class="font-weight-medium">
-                                            Tidak Tersedia
-                                        </span>
-
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
 
