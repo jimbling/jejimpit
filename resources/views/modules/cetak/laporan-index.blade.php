@@ -15,12 +15,13 @@
                         <a class="nav-link" data-bs-toggle="tab" href="#bku" role="tab">Bulanan (BKU)</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#bku_ringkas" role="tab">BKU Ringkas</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#pengeluaran" role="tab">Pengeluaran per
                             Kategori</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#partisipasi" role="tab">Partisipasi Warga</a>
-                    </li>
+
                 </ul>
             </div>
             <div class="card-body tab-content">
@@ -36,9 +37,9 @@
                 <div class="tab-pane fade" id="pengeluaran">
                     @include('modules.cetak.laporan.partials._filter_pengeluaran')
                 </div>
-                {{-- Partisipasi --}}
-                <div class="tab-pane fade" id="partisipasi">
-                    @include('modules.cetak.laporan.partials._filter_partisipasi')
+                {{-- BKU RIngkas --}}
+                <div class="tab-pane fade" id="bku_ringkas">
+                    @include('modules.cetak.laporan.partials._filter_bku_ringkas')
                 </div>
             </div>
         </div>

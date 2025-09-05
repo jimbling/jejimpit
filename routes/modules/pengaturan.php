@@ -24,7 +24,7 @@ Route::prefix('pengaturan')->middleware(['auth', 'verified'])->name('pengaturan.
 });
 
 // Profile
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [PengaturanController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [PengaturanController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [PengaturanController::class, 'destroy'])->name('profile.destroy');

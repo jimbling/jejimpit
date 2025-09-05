@@ -6,14 +6,15 @@ use Mpdf\Mpdf;
 use Carbon\Carbon;
 use App\Models\BkuLengkap;
 use Illuminate\Http\Request;
+use App\Models\PenerimaanBulanan;
 use App\Models\TransaksiJimpitan;
-use App\Models\PenerimaanMingguan;
 
 // Jika pakai barryvdh/laravel-dompdf:
+use App\Models\PenerimaanMingguan;
 use Illuminate\Support\Collection;
 use App\Models\KategoriPengeluaran;
-use App\Http\Controllers\Controller;
 use App\Models\PengeluaranJimpitan;
+use App\Http\Controllers\Controller;
 
 class LaporanController extends Controller
 {
@@ -273,5 +274,97 @@ class LaporanController extends Controller
             'items',
             'total'
         ));
+    }
+
+
+
+
+    public function bkuRingkas(Request $request)
+    {
+        $bulan = $request->input('bulan', now()->month);
+        $tahun = $request->input('tahun', now()->year);
+
+        $data = $this->generateBkuRingkas($bulan, $tahun);
+        return response()->json($data);
+    }
+
+    public function cetakRingkas(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $data = $this->generateBkuRingkas($bulan, $tahun);
+
+        $saldo_awal = $data['data'][0]['saldo'] ?? 0;
+        $saldo_akhir = $data['total_bulan'] ?? 0;
+
+        return view('modules.cetak.laporan.cetak_bku_ringkas', [
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'items' => collect($data['data']),
+            'saldo_awal' => $saldo_awal,
+            'saldo_akhir' => $saldo_akhir,
+        ]);
+    }
+
+
+    private function generateBkuRingkas($bulan, $tahun)
+    {
+        $prevBulan = $bulan - 1;
+        $prevTahun = $tahun;
+        if ($bulan === 1) {
+            $prevBulan = 12;
+            $prevTahun = $tahun - 1;
+        }
+        $saldoAwal = PenerimaanBulanan::where('bulan', $prevBulan)
+            ->where('tahun', $prevTahun)
+            ->value('saldo_akhir') ?? 0;
+
+        $penerimaan = TransaksiJimpitan::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get();
+
+        $pengeluaran = PengeluaranJimpitan::whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get();
+
+        $groupPenerimaan = $penerimaan->groupBy(fn($t) => Carbon::parse($t->tanggal)->weekOfMonth);
+        $groupPengeluaran = $pengeluaran->groupBy(fn($t) => Carbon::parse($t->tanggal)->weekOfMonth);
+
+        $data = collect();
+        $saldo = $saldoAwal;
+
+        $data->push([
+            'minggu' => 'Saldo Bulan Lalu',
+            'penerimaan' => 0,
+            'pengeluaran' => 0,
+            'saldo' => $saldo,
+        ]);
+
+        $totalMinggu = max($groupPenerimaan->keys()->max() ?? 0, $groupPengeluaran->keys()->max() ?? 0);
+
+        for ($i = 1; $i <= $totalMinggu; $i++) {
+            $totalMasuk = $groupPenerimaan[$i] ?? collect();
+            $totalKeluar = $groupPengeluaran[$i] ?? collect();
+
+            $danaMasuk = $totalMasuk->sum('jumlah');
+            $danaKeluar = $totalKeluar->sum('jumlah');
+
+            $saldo += $danaMasuk - $danaKeluar;
+
+            $data->push([
+                'minggu' => "Minggu $i",
+                'penerimaan' => $danaMasuk,
+                'pengeluaran' => $danaKeluar,
+                'saldo' => $saldo,
+            ]);
+        }
+
+        return [
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'data' => $data,
+            'total_bulan' => $saldo,
+        ];
     }
 }

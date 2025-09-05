@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 
@@ -14,6 +15,8 @@ Route::post('/clear-session-flash', function (Illuminate\Http\Request $request) 
     }
     return response()->json(['status' => 'success']);
 })->name('clear.session.flash');
+
+
 
 // Require route modul
 require __DIR__ . '/auth.php';

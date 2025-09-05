@@ -7,9 +7,12 @@ use App\Models\Checkin;
 use App\Models\Jimpitan;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
-use App\Services\Jimpitan\WhatsappService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Services\Jimpitan\FonnteService;
+use App\Services\Jimpitan\WhatsappService;
 use App\Services\Jimpitan\KehadiranService;
 
 class PetugasController extends Controller
@@ -55,35 +58,48 @@ class PetugasController extends Controller
         $userId = auth()->id();
         $tanggal = $request->tanggal;
 
-        // Cek check-in
-        $checkin = Checkin::where('user_id', $userId)
-            ->whereDate('tanggal', $tanggal)
-            ->first();
+        return DB::transaction(function () use ($request, $whatsappService, $userId, $tanggal) {
+            // 🔒 Lock baris checkin untuk user & tanggal ini (agar tidak diakses bersamaan)
+            $checkin = Checkin::where('user_id', $userId)
+                ->whereDate('tanggal', $tanggal)
+                ->lockForUpdate()
+                ->first();
 
-        if (!$checkin) {
-            return redirect()->back()->withErrors(['Anda belum melakukan check-in hari ini.']);
-        }
+            if (!$checkin) {
+                throw new \Exception('Anda belum melakukan check-in hari ini.');
+            }
 
-        // Simpan transaksi
-        $transaksi = TransaksiJimpitan::create([
-            'user_id' => $userId,
-            'warga_id' => $request->warga_id,
-            'tanggal' => $tanggal,
-            'jumlah' => $request->jumlah,
-            'keterangan' => $request->keterangan,
-        ]);
+            // Buat transaksi
+            $transaksi = TransaksiJimpitan::create([
+                'user_id' => $userId,
+                'warga_id' => $request->warga_id,
+                'tanggal' => $tanggal,
+                'jumlah' => $request->jumlah,
+                'keterangan' => $request->keterangan,
+            ]);
 
-        // Update jumlah transaksi di Checkin
-        $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
-            ->whereDate('tanggal', $tanggal)
-            ->count();
-        $checkin->save();
+            // Hitung ulang jumlah transaksi (pasti akurat karena sudah di-lock)
+            $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
+                ->whereDate('tanggal', $tanggal)
+                ->count();
+            $checkin->save();
 
-        // 🔥 Panggil service WhatsApp
-        $waData = $whatsappService->generateMessage($transaksi);
+            // Generate pesan WA
+            $waData = $whatsappService->generateMessage($transaksi);
 
-        // Redirect ke dashboard dengan session
-        return redirect()->route('petugas.home')->with('jimpitan_success', $waData);
+            // Kirim WA (ini di luar transaksi, supaya kalau gagal WA tetap data transaksi tersimpan)
+            $response = Http::withHeaders([
+                'Authorization' => env('FONNTE_TOKEN'),
+            ])->asForm()->post('https://api.fonnte.com/send', [
+                'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+                'message' => $waData['message'],
+                'countryCode' => '62',
+            ]);
+
+            $waData['fonnte_response'] = $response->json();
+
+            return redirect()->route('petugas.home')->with('jimpitan_success', $waData);
+        });
     }
 
 

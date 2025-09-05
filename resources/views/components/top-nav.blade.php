@@ -69,26 +69,21 @@
                         role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Tentang Siesde</h5>
+                                <h5 class="modal-title">Tentang Jimpitan 63</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <p>
-                                    Siesde adalah aplikasi untuk mengelola data Satuan Pendidikan, khususnya untuk
-                                    jenjang Sekolah Dasar.
-                                    Siesde dapat mengelola data Buku Induk, Bantuan Peserta Didik, dan Peminjaman Barang
-                                    Asset.
+                                    <strong>Jimpitan 63</strong> adalah aplikasi untuk mendukung program kemandirian dan
+                                    gotong royong warga <strong>Kedungtangkil RT 63</strong>.
+                                    Jimpitan ini berupa iuran rutin sebesar <strong>Rp2.000 setiap malam Minggu</strong>
+                                    yang dikelola oleh remaja RT 63.
                                 </p>
                                 <p>
-                                    Siesde dibangun menggunakan <strong>Framework Laravel 12</strong> dan <strong>Tabler
-                                        Komponen</strong>.
-                                </p>
-                                <p>
-                                    Siesde ini dibawah lisensi MIT, jadi silahkan boleh dimodifikasi selama itu untuk
-                                    kepentingan sendiri
-                                    dan tidak diperjualbelikan. Untuk ketentuan lainnya tercantum pada Terms of
-                                    Condition.
+                                    Seluruh kegiatan mulai dari pencatatan transaksi hingga laporan keuangan dilakukan
+                                    secara <strong>online</strong>, sehingga memudahkan pengelolaan serta menjaga
+                                    <strong>transparansi</strong> keuangan yang dapat diakses publik.
                                 </p>
                                 <p>
                                     <strong>Teknologi yang digunakan:</strong>
@@ -127,11 +122,11 @@
                                     </li>
                                 </ul>
                                 </p>
-
                             </div>
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- Modal Logout -->

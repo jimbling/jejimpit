@@ -13,6 +13,33 @@
             margin: 20mm;
         }
 
+        .kop-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* 👈 ini bikin kiri & kanan berjauhan */
+            margin-bottom: 10px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+        }
+
+        .kop {
+            text-align: left;
+            flex: 1;
+        }
+
+        .kop.kanan {
+            text-align: right;
+            flex: 0 0 auto;
+            /* supaya tidak melar */
+        }
+
+        .kop img {
+            max-height: 70px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
         body {
             font-size: 13px;
         }
@@ -51,6 +78,30 @@
             $startFormatted = $start ? Carbon::parse($start)->translatedFormat('d F Y') : '-';
             $endFormatted = $end ? Carbon::parse($end)->translatedFormat('d F Y') : '-';
         @endphp
+
+        <div class="kop-wrapper">
+            <!-- Kiri: kop sekolah -->
+            <div class="kop">
+                @if (system_setting('kop_sekolah'))
+                    <img src="{{ Storage::url(system_setting('kop_sekolah')) }}" alt="Logo Sekolah">
+                @endif
+                <div class="alamat">
+                    {{ system_setting('nama_dusun') }},
+                    {{ system_setting('desa_kelurahan') }},
+                    {{ system_setting('kecamatan') }},
+                    {{ system_setting('kabupaten_kota') }},
+                    {{ system_setting('provinsi') }},
+                    Kode Pos {{ system_setting('kode_pos') }}
+                </div>
+            </div>
+
+            <!-- Kanan: logo tambahan -->
+            <div class="kop kanan">
+                @if (system_setting('logo'))
+                    <img src="{{ Storage::url(system_setting('logo')) }}" alt="Logo Kanan">
+                @endif
+            </div>
+        </div>
 
         {{-- Judul --}}
         <div class="judul">

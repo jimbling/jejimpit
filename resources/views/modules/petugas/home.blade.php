@@ -3,6 +3,7 @@
 @section('content')
     <div class="p-4 space-y-4">
         {{-- Modern alert sukses entri jimpitan --}}
+
         @if (session('jimpitan_success'))
             @php $data = session('jimpitan_success'); @endphp
             <div id="alert-jimpitan"
@@ -12,6 +13,7 @@
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
+
                     <div class="flex-1 text-sm text-gray-700">
                         <strong class="font-semibold">Berhasil!</strong>
                         <p class="mt-1">
@@ -19,22 +21,23 @@
                             <strong>Rp {{ $data['jumlah'] }}</strong> pada tanggal
                             <strong>{{ $data['tanggal'] }}</strong>.
                         </p>
+
+                        {{-- Status WA --}}
+                        @if (isset($data['fonnte_response']))
+                            <p class="mt-1 text-xs text-green-600">
+                                📱 WhatsApp: {{ $data['fonnte_response']['detail'] ?? 'Pesan berhasil dikirim' }}
+                            </p>
+                        @endif
                     </div>
+
                     <button onclick="document.getElementById('alert-jimpitan').remove()"
                         class="ml-3 text-gray-400 hover:text-gray-600 flex-shrink-0">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-
-                {{-- Tombol WA --}}
-                @if (isset($data['wa_url']))
-                    <a href="{{ $data['wa_url'] }}" target="_blank"
-                        class="mt-2 inline-flex items-center px-3 py-1.5 bg-green-500 text-white rounded hover:bg-green-600 text-sm font-medium">
-                        Kirim WhatsApp
-                    </a>
-                @endif
             </div>
         @endif
+
 
 
         <!-- Header sapaan -->

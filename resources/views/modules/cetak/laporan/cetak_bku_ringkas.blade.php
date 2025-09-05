@@ -12,7 +12,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* 👈 ini bikin kiri & kanan berjauhan */
             margin-bottom: 10px;
             border-bottom: 2px solid #000;
             padding-bottom: 8px;
@@ -26,7 +25,6 @@
         .kop.kanan {
             text-align: right;
             flex: 0 0 auto;
-            /* supaya tidak melar */
         }
 
         .kop img {
@@ -37,12 +35,13 @@
 
         body {
             font-family: Arial, sans-serif;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
+            margin-top: 15px;
         }
 
         th,
@@ -50,6 +49,7 @@
             border: 1px solid #000;
             padding: 4px 6px;
             font-size: 12px;
+            text-align: center;
         }
 
         th {
@@ -58,6 +58,18 @@
 
         .summary {
             margin-top: 20px;
+            width: 50%;
+        }
+
+        .summary td {
+            border: none;
+            text-align: right;
+            padding: 4px 6px;
+        }
+
+        .summary th {
+            border: none;
+            text-align: left;
         }
 
         .ttd {
@@ -89,7 +101,6 @@
 
 <body>
     <div class="kop-wrapper">
-        <!-- Kiri: kop sekolah -->
         <div class="kop">
             @if (system_setting('kop_sekolah'))
                 <img src="{{ Storage::url(system_setting('kop_sekolah')) }}" alt="Logo Sekolah">
@@ -104,7 +115,6 @@
             </div>
         </div>
 
-        <!-- Kanan: logo tambahan -->
         <div class="kop kanan">
             @if (system_setting('logo'))
                 <img src="{{ Storage::url(system_setting('logo')) }}" alt="Logo Kanan">
@@ -112,76 +122,53 @@
         </div>
     </div>
 
-    <h3>
-        Buku Kas Umum — Bulan
+    <h3>Buku Kas Umum Ringkas — Bulan
         {{ \Carbon\Carbon::createFromDate(null, (int) $bulan, 1)->translatedFormat('F') }} {{ $tahun }}
     </h3>
 
     @php
-        $items = $items ?? collect();
-        $total_masuk = $total_masuk ?? $items->sum('dana_masuk');
-        $total_keluar = $total_keluar ?? $items->sum('dana_keluar');
-        $saldo_awal =
-            $saldo_awal ??
-            (optional($items->firstWhere('is_saldo_awal', true))->saldo ?? ($items->first()->saldo ?? 0));
-        $saldo_akhir =
-            $saldo_akhir ??
-            (optional($items->firstWhere('is_saldo_akhir', true))->saldo ?? ($items->last()->saldo ?? 0));
+        $saldo_awal = $saldo_awal ?? ($items->first()->saldo ?? 0);
+        $saldo_akhir = $saldo_akhir ?? ($items->last()->saldo ?? 0);
+        $total_masuk = $items->sum('penerimaan');
+        $total_keluar = $items->sum('pengeluaran');
     @endphp
 
     <table>
         <thead>
             <tr>
-                <th style="width:20px">No</th>
-                <th style="width:90px">Tanggal</th>
-                <th style="width:200px">Uraian</th>
-                <th style="width:70px">Dana Masuk</th>
-                <th style="width:70px">Dana Keluar</th>
-                <th style="width:70px">Saldo</th>
-
+                <th>Minggu</th>
+                <th>Penerimaan</th>
+                <th>Pengeluaran</th>
+                <th>Saldo</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($items as $i => $row)
+            @forelse($items as $row)
                 <tr>
-                    <td class="text-center">{{ $row->no ?? $i + 1 }}</td>
-                    <td class="text-center">{{ optional($row->tanggal)->format('d/m/Y') }}</td>
-                    <td>{{ $row->uraian }}</td>
-                    <td class="text-right">Rp {{ number_format($row->dana_masuk ?? 0, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($row->dana_keluar ?? 0, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($row->saldo ?? 0, 0, ',', '.') }}</td>
-
+                    <td>{{ $row['minggu'] }}</td>
+                    <td>Rp {{ number_format($row['penerimaan'], 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($row['pengeluaran'], 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($row['saldo'], 0, ',', '.') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center">Tidak ada data untuk periode ini.</td>
+                    <td colspan="4" class="text-center">Tidak ada data</td>
                 </tr>
             @endforelse
         </tbody>
-    </table>
 
-    {{-- Ringkasan --}}
-    <table class="summary">
-        <tr>
-            <th style="text-align:left; width:200px">Saldo Awal</th>
-            <td style="text-align:right">Rp {{ number_format($saldo_awal, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th style="text-align:left">Total Dana Masuk</th>
-            <td style="text-align:right">Rp {{ number_format($total_masuk, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th style="text-align:left">Total Dana Keluar</th>
-            <td style="text-align:right">Rp {{ number_format($total_keluar, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th style="text-align:left">Saldo Akhir</th>
-            <td style="text-align:right"><strong>Rp {{ number_format($saldo_akhir, 0, ',', '.') }}</strong></td>
-        </tr>
+        <tfoot>
+            <tr>
+                <th>Total Bulan</th>
+                <th>Rp {{ number_format($total_masuk, 0, ',', '.') }}</th>
+                <th>Rp {{ number_format($total_keluar, 0, ',', '.') }}</th>
+                <th>Rp {{ number_format($saldo_akhir, 0, ',', '.') }}</th>
+            </tr>
+        </tfoot>
     </table>
 
     {{-- Tanda Tangan --}}
-    <table class="ttd" style="page-break-inside: avoid;">
+    <table class="ttd">
         <tr>
             <td>
                 Mengetahui,<br>
@@ -189,21 +176,20 @@
                 <div class="nama">{{ system_setting('nama_rt') }}</div>
             </td>
             <td>
-                {{ system_setting('nama_dusun') }}, {{ $tanggal_akhir->translatedFormat('d F Y') }} <br>
+                {{ system_setting('nama_dusun') }}, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }} <br>
                 Koordinator Kegiatan Jimpitan 63
                 <div class="nama">{{ system_setting('nama_koordinator') }}</div>
             </td>
         </tr>
     </table>
 
-
-    {{-- Footer --}}
     <div class="footer">
         <em>
             Semua laporan kegiatan Jimpitan baik penerimaan, pengeluaran, keaktifan warga dan petugas
             dapat diakses pada <strong>www.jimpitan.remaked.web.id</strong>
         </em>
     </div>
+
     <script>
         window.onload = function() {
             window.print();

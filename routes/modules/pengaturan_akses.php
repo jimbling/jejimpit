@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Modules\Pengaturan\AksesController;
 
-Route::prefix('pengaturan/akses')->name('pengaturan.akses.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('pengaturan/akses')->name('pengaturan.akses.')->group(function () {
     Route::get('edit-role/{id}', [AksesController::class, 'editRole'])
         ->can('edit peran')->name('edit-role');
     Route::get('edit-akses', [AksesController::class, 'editPermission'])

@@ -39,6 +39,11 @@ Route::prefix('laporan')
             // ✅ route send-wa taruh di sini
             Route::get('/{id}/send-wa', [PartisipasiController::class, 'sendWa'])->name('partisipasi.send-wa');
         });
+
+        Route::get('/bku/ringkas', [LaporanController::class, 'bkuRingkas'])
+            ->name('bku.ringkas');
+        Route::get('/bku-ringkas/cetak', [LaporanController::class, 'cetakRingkas'])
+            ->name('bku.ringkas.cetak');
     });
 
 Route::get('/laporan/bku/json', [LaporanController::class, 'bkuBulananJson'])->name('laporan.bku.public');

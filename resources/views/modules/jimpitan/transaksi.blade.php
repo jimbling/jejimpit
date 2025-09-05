@@ -112,28 +112,29 @@
                                 'transaksi' => $transaksi,
                             ])
 
-                        </div>
 
-                        <div class="card-footer d-flex align-items-center">
-                            <div class="dropdown">
-                                <a class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span id="page-count" class="me-1">10</span>
-                                    <span>data</span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" onclick="setPageListItems(event)" data-value="10">10
-                                        data</a>
-                                    <a class="dropdown-item" onclick="setPageListItems(event)" data-value="20">20
-                                        data</a>
-                                    <a class="dropdown-item" onclick="setPageListItems(event)" data-value="50">50
-                                        data</a>
-                                    <a class="dropdown-item" onclick="setPageListItems(event)" data-value="100">100
-                                        data</a>
+
+                            <div class="card-footer d-flex align-items-center">
+                                <div class="dropdown">
+                                    <a class="btn dropdown-toggle" data-bs-toggle="dropdown">
+                                        <span id="page-count" class="me-1">10</span>
+                                        <span>data</span>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" onclick="setPageListItems(event)" data-value="10">10
+                                            data</a>
+                                        <a class="dropdown-item" onclick="setPageListItems(event)" data-value="20">20
+                                            data</a>
+                                        <a class="dropdown-item" onclick="setPageListItems(event)" data-value="50">50
+                                            data</a>
+                                        <a class="dropdown-item" onclick="setPageListItems(event)" data-value="100">100
+                                            data</a>
+                                    </div>
                                 </div>
+                                <ul class="pagination m-0 ms-auto">
+                                    <!-- Pagination buttons -->
+                                </ul>
                             </div>
-                            <ul class="pagination m-0 ms-auto">
-                                <!-- Pagination buttons -->
-                            </ul>
                         </div>
 
                     </div>
@@ -215,6 +216,20 @@
                     initListJS();
                 });
             </script>
+
+            <script>
+                function setPageListItems(event) {
+                    const newPageCount = parseInt(event.target.dataset.value);
+
+                    if (list) {
+                        list.page = newPageCount;
+                        list.update();
+                    }
+
+                    document.getElementById('page-count').textContent = newPageCount;
+                }
+            </script>
+
 
 
             <script>
@@ -303,6 +318,22 @@
                     });
                 });
             </script>
+
+            @if (session('jimpitan_success'))
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: @json(session('jimpitan_success')), // langsung string
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+                    });
+                </script>
+            @endif
         @endpush
 
 

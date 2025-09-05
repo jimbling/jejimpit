@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label required">Nama RT</label>
+                                <label class="form-label required">Nama Ketua RT</label>
                                 <input type="text" class="form-control" name="nama_rt" value="{{ $setting->nama_rt }}"
                                     disabled>
                             </div>
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required">Nama Koordinator</label>
+                        <label class="form-label required">Nama Koordinator Jimpitan</label>
                         <textarea class="form-control" name="nama_koordinator" rows="2" disabled>{{ $setting->nama_koordinator }}</textarea>
                     </div>
 

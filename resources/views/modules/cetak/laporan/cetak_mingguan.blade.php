@@ -14,6 +14,8 @@
         .kop-wrapper {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            /* 👈 ini bikin kiri & kanan berjauhan */
             margin-bottom: 10px;
             border-bottom: 2px solid #000;
             padding-bottom: 8px;
@@ -24,11 +26,18 @@
             flex: 1;
         }
 
+        .kop.kanan {
+            text-align: right;
+            flex: 0 0 auto;
+            /* supaya tidak melar */
+        }
+
         .kop img {
             max-height: 70px;
             display: block;
             margin-bottom: 4px;
         }
+
 
         .alamat {
             font-size: 12px;
@@ -73,6 +82,7 @@
             width: 50%;
             vertical-align: top;
             text-align: center;
+            border: none;
         }
 
         .nama {
@@ -95,9 +105,10 @@
 <body onload="window.print()">
 
     <div class="kop-wrapper">
+        <!-- Kiri: kop sekolah -->
         <div class="kop">
             @if (system_setting('kop_sekolah'))
-                <img src="{{ Storage::url(system_setting('kop_sekolah')) }}" alt="Logo">
+                <img src="{{ Storage::url(system_setting('kop_sekolah')) }}" alt="Logo Sekolah">
             @endif
             <div class="alamat">
                 {{ system_setting('nama_dusun') }},
@@ -108,7 +119,15 @@
                 Kode Pos {{ system_setting('kode_pos') }}
             </div>
         </div>
+
+        <!-- Kanan: logo tambahan -->
+        <div class="kop kanan">
+            @if (system_setting('logo'))
+                <img src="{{ Storage::url(system_setting('logo')) }}" alt="Logo Kanan">
+            @endif
+        </div>
     </div>
+
 
     <h4>Laporan Penerimaan Jimpitan</h4>
     <p class="subjudul">Bulan {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }} {{ $tahun }}

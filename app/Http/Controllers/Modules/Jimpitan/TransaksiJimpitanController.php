@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Modules\Jimpitan;
 
+use App\Models\Warga;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
-use App\Services\Jimpitan\WhatsappService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Services\Jimpitan\WhatsappService;
 use App\Services\Jimpitan\TransaksiService;
 
 class TransaksiJimpitanController extends Controller
@@ -92,6 +94,35 @@ class TransaksiJimpitanController extends Controller
         // Langsung buka halaman wa.me
         return redirect()->away($waData['wa_url']);
     }
+
+    public function resendWhatsappFonnte($id, WhatsappService $whatsappService)
+    {
+        $transaksi = TransaksiJimpitan::with(['warga', 'user'])->findOrFail($id);
+
+        // 🔄 Generate pesan WA
+        $waData = $whatsappService->generateMessage($transaksi);
+
+        // 📲 Kirim ulang pesan via Fonnte
+        $response = Http::withHeaders([
+            'Authorization' => env('FONNTE_TOKEN'),
+        ])->asForm()->post('https://api.fonnte.com/send', [
+            'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+            'message' => $waData['message'],
+            'countryCode' => '62',
+        ]);
+
+        $fonnteResponse = $response->json();
+
+        // 🔖 Buat pesan singkat untuk notifikasi Swal
+        $pesan = "Pesan ke {$transaksi->warga->nama_kk} berhasil dikirim ulang.";
+
+        // Simpan log jika perlu
+        // $transaksi->update(['last_wa_response' => json_encode($fonnteResponse)]);
+
+        return redirect()->route('transaksi.jimpitan.index')
+            ->with('jimpitan_success', $pesan);
+    }
+
 
 
 
