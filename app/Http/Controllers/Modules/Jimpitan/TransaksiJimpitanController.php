@@ -104,8 +104,8 @@ class TransaksiJimpitanController extends Controller
 
         // 📲 Kirim ulang pesan via Fonnte
         $response = Http::withHeaders([
-            'Authorization' => env('FONNTE_TOKEN'),
-        ])->asForm()->post('https://api.fonnte.com/send', [
+            'Authorization' => config('services.fonnte.token'), // jangan pakai env() langsung
+        ])->post('https://api.fonnte.com/send', [
             'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
             'message' => $waData['message'],
             'countryCode' => '62',
@@ -116,12 +116,10 @@ class TransaksiJimpitanController extends Controller
         // 🔖 Buat pesan singkat untuk notifikasi Swal
         $pesan = "Pesan ke {$transaksi->warga->nama_kk} berhasil dikirim ulang.";
 
-        // Simpan log jika perlu
-        // $transaksi->update(['last_wa_response' => json_encode($fonnteResponse)]);
-
         return redirect()->route('transaksi.jimpitan.index')
             ->with('jimpitan_success', $pesan);
     }
+
 
 
 

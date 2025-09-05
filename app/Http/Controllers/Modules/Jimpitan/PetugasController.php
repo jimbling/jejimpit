@@ -89,8 +89,8 @@ class PetugasController extends Controller
 
             // Kirim WA (ini di luar transaksi, supaya kalau gagal WA tetap data transaksi tersimpan)
             $response = Http::withHeaders([
-                'Authorization' => env('FONNTE_TOKEN'),
-            ])->asForm()->post('https://api.fonnte.com/send', [
+                'Authorization' => config('services.fonnte.token'), // token dari config
+            ])->post('https://api.fonnte.com/send', [
                 'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
                 'message' => $waData['message'],
                 'countryCode' => '62',
