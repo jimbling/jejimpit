@@ -16,19 +16,7 @@ Route::post('/clear-session-flash', function (Illuminate\Http\Request $request) 
     return response()->json(['status' => 'success']);
 })->name('clear.session.flash');
 
-Route::get('/fonnte', function () {
-    $token = config('services.fonnte.token'); // atau langsung pakai token string
 
-    $response = Http::withHeaders([
-        'Authorization' => $token, // atau 'Bearer ' . $token jika memang perlu
-    ])->post('https://api.fonnte.com/send', [
-        'target' => '6283130500748',
-        'message' => 'Test pesan dari Laravel',
-    ]);
-
-
-    dd($response->json());
-});
 
 
 
