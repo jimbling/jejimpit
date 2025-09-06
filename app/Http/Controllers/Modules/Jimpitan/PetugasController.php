@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Modules\Jimpitan;
 
 use App\Models\Warga;
 use App\Models\Checkin;
+use App\Models\WaQueue;
 use App\Models\Jimpitan;
+use App\Jobs\ProcessWaQueue;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +17,7 @@ use App\Services\Jimpitan\FonnteService;
 use App\Services\Jimpitan\WhatsappService;
 use App\Services\Jimpitan\KehadiranService;
 
+
 class PetugasController extends Controller
 {
 
@@ -23,12 +26,13 @@ class PetugasController extends Controller
     public function index()
     {
         $petugas = auth()->user();
-        $today = now()->toDateString();
+        $today = now(config('app.timezone'))->toDateString();
 
-        // Cek apakah sudah check-in hari ini
         $sudahCheckin = Checkin::where('user_id', $petugas->id)
             ->whereDate('tanggal', $today)
             ->exists();
+
+
 
         return view('modules.petugas.home', compact('sudahCheckin'));
     }
@@ -46,7 +50,68 @@ class PetugasController extends Controller
     /**
      * Simpan entri jimpitan baru
      */
-    public function store(Request $request, WhatsappService $whatsappService)
+    // public function store(Request $request, WhatsappService $whatsappService)
+    // {
+    //     $request->validate([
+    //         'warga_id' => 'required|exists:warga,id',
+    //         'tanggal' => 'required|date',
+    //         'jumlah' => 'required|numeric|min:1',
+    //         'keterangan' => 'nullable|string|max:255',
+    //     ]);
+
+    //     $userId = auth()->id();
+    //     $tanggal = $request->tanggal;
+
+    //     return DB::transaction(function () use ($request, $whatsappService, $userId, $tanggal) {
+    //         // 🔒 Lock baris checkin untuk user & tanggal ini
+    //         $checkin = Checkin::where('user_id', $userId)
+    //             ->whereDate('tanggal', $tanggal)
+    //             ->lockForUpdate()
+    //             ->first();
+
+    //         if (!$checkin) {
+    //             throw new \Exception('Anda belum melakukan check-in hari ini.');
+    //         }
+
+    //         // Buat transaksi
+    //         $transaksi = TransaksiJimpitan::create([
+    //             'user_id' => $userId,
+    //             'warga_id' => $request->warga_id,
+    //             'tanggal' => $tanggal,
+    //             'jumlah' => $request->jumlah,
+    //             'keterangan' => $request->keterangan,
+    //         ]);
+
+    //         // Hitung ulang jumlah transaksi
+    //         $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
+    //             ->whereDate('tanggal', $tanggal)
+    //             ->count();
+    //         $checkin->save();
+
+    //         // Generate pesan WA
+    //         $waData = $whatsappService->generateMessage($transaksi);
+
+    //         // 📲 Kirim WA via WA Gateway dengan token statis
+    //         $response = Http::withHeaders([
+    //             'Authorization' => 'Bearer ' . config('services.wagateway.token'), // token statis dari env
+    //         ])->post(config('services.wagateway.url') . '/api/wa/send', [
+    //             'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+    //             'message' => $waData['message'],
+    //         ]);
+
+    //         $waData['gateway_response'] = $response->json();
+
+    //         return redirect()->route('petugas.home')
+    //             ->with('jimpitan_success', [
+    //                 'warga' => $transaksi->warga->nama_kk,
+    //                 'jumlah' => $transaksi->jumlah,
+    //                 'tanggal' => $transaksi->tanggal->format('d-m-Y'),
+    //                 'wa_response' => $waData['gateway_response'],
+    //             ]);
+    //     });
+    // }
+
+    public function store(Request $request)
     {
         $request->validate([
             'warga_id' => 'required|exists:warga,id',
@@ -58,8 +123,8 @@ class PetugasController extends Controller
         $userId = auth()->id();
         $tanggal = $request->tanggal;
 
-        return DB::transaction(function () use ($request, $whatsappService, $userId, $tanggal) {
-            // 🔒 Lock baris checkin untuk user & tanggal ini
+        return DB::transaction(function () use ($request, $userId, $tanggal) {
+            // Lock checkin
             $checkin = Checkin::where('user_id', $userId)
                 ->whereDate('tanggal', $tanggal)
                 ->lockForUpdate()
@@ -84,28 +149,33 @@ class PetugasController extends Controller
                 ->count();
             $checkin->save();
 
-            // Generate pesan WA
+            // 1️⃣ Generate pesan WA
+            $whatsappService = new \App\Services\Jimpitan\WhatsappService();
             $waData = $whatsappService->generateMessage($transaksi);
 
-            // 📲 Kirim WA via WA Gateway dengan token statis
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.wagateway.token'), // token statis dari env
-            ])->post(config('services.wagateway.url') . '/api/wa/send', [
-                'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
-                'message' => $waData['message'],
+            // Simpan ke tabel queue, delay 3 menit
+            $waQueue = WaQueue::create([
+                'transaksi_id' => $transaksi->id,
+                'warga_id'    => $transaksi->warga_id,
+                'message'     => $waData['message'],
+                'status'      => 'pending',
+                'scheduled_at' => now()->addMinutes(3),
             ]);
 
-            $waData['gateway_response'] = $response->json();
+            // Dispatch job ke queue
+            ProcessWaQueue::dispatch($waQueue)->delay($waQueue->scheduled_at);
+
 
             return redirect()->route('petugas.home')
                 ->with('jimpitan_success', [
                     'warga' => $transaksi->warga->nama_kk,
                     'jumlah' => $transaksi->jumlah,
                     'tanggal' => $transaksi->tanggal->format('d-m-Y'),
-                    'wa_response' => $waData['gateway_response'],
+                    'wa_response' => null, // belum dikirim
                 ]);
         });
     }
+
 
 
 
