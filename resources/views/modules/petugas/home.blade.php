@@ -23,9 +23,10 @@
                         </p>
 
                         {{-- Status WA --}}
-                        @if (isset($data['fonnte_response']))
+                        @if (isset($data['wa_response']))
                             <p class="mt-1 text-xs text-green-600">
-                                📱 WhatsApp: {{ $data['fonnte_response']['detail'] ?? 'Pesan berhasil dikirim' }}
+                                📱 WhatsApp:
+                                {{ $data['wa_response']['success'] ? 'Pesan berhasil dikirim' : 'Gagal mengirim pesan' }}
                             </p>
                         @endif
                     </div>

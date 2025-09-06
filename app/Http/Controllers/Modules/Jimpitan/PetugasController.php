@@ -59,7 +59,7 @@ class PetugasController extends Controller
         $tanggal = $request->tanggal;
 
         return DB::transaction(function () use ($request, $whatsappService, $userId, $tanggal) {
-            // 🔒 Lock baris checkin untuk user & tanggal ini (agar tidak diakses bersamaan)
+            // 🔒 Lock baris checkin untuk user & tanggal ini
             $checkin = Checkin::where('user_id', $userId)
                 ->whereDate('tanggal', $tanggal)
                 ->lockForUpdate()
@@ -78,7 +78,7 @@ class PetugasController extends Controller
                 'keterangan' => $request->keterangan,
             ]);
 
-            // Hitung ulang jumlah transaksi (pasti akurat karena sudah di-lock)
+            // Hitung ulang jumlah transaksi
             $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
                 ->whereDate('tanggal', $tanggal)
                 ->count();
@@ -87,20 +87,26 @@ class PetugasController extends Controller
             // Generate pesan WA
             $waData = $whatsappService->generateMessage($transaksi);
 
-            // Kirim WA (ini di luar transaksi, supaya kalau gagal WA tetap data transaksi tersimpan)
+            // 📲 Kirim WA via WA Gateway dengan token statis
             $response = Http::withHeaders([
-                'Authorization' => config('services.fonnte.token'), // token dari config
-            ])->post('https://api.fonnte.com/send', [
-                'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+                'Authorization' => 'Bearer ' . config('services.wagateway.token'), // token statis dari env
+            ])->post(config('services.wagateway.url') . '/api/wa/send', [
+                'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
                 'message' => $waData['message'],
-                'countryCode' => '62',
             ]);
 
-            $waData['fonnte_response'] = $response->json();
+            $waData['gateway_response'] = $response->json();
 
-            return redirect()->route('petugas.home')->with('jimpitan_success', $waData);
+            return redirect()->route('petugas.home')
+                ->with('jimpitan_success', [
+                    'warga' => $transaksi->warga->nama_kk,
+                    'jumlah' => $transaksi->jumlah,
+                    'tanggal' => $transaksi->tanggal->format('d-m-Y'),
+                    'wa_response' => $waData['gateway_response'],
+                ]);
         });
     }
+
 
 
 

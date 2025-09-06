@@ -24,7 +24,7 @@ Route::get('/transaksi/{id}/resend-wa', [TransaksiJimpitanController::class, 're
     ->middleware(['auth', 'can:atur jimpitan'])
     ->name('transaksi.resendWa');
 
-Route::get('/transaksi/{id}/resend-wa-api', [TransaksiJimpitanController::class, 'resendWhatsappFonnte'])
+Route::get('/transaksi/{id}/resend-wa-api', [TransaksiJimpitanController::class, 'resendWhatsappJiget'])
     ->middleware(['auth', 'can:atur jimpitan'])
     ->name('transaksi.resendWaFonnte');
 

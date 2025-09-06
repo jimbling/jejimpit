@@ -322,11 +322,15 @@
             @if (session('jimpitan_success'))
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
+                        const message = @json(session('jimpitan_success'));
+                        const isSuccess = !message.toLowerCase().includes(
+                            'gagal'); // sederhana: kalau ada kata 'gagal', jadikan error
+
                         Swal.fire({
                             toast: true,
                             position: 'top-end',
-                            icon: 'success',
-                            title: @json(session('jimpitan_success')), // langsung string
+                            icon: isSuccess ? 'success' : 'error', // sesuaikan icon
+                            title: message,
                             showConfirmButton: false,
                             timer: 3000,
                             timerProgressBar: true,

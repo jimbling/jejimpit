@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Modules\Jimpitan;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -95,30 +96,53 @@ class TransaksiJimpitanController extends Controller
         return redirect()->away($waData['wa_url']);
     }
 
-    public function resendWhatsappFonnte($id, WhatsappService $whatsappService)
+    public function resendWhatsappJiget($id, WhatsappService $whatsappService)
     {
         $transaksi = TransaksiJimpitan::with(['warga', 'user'])->findOrFail($id);
 
         // 🔄 Generate pesan WA
         $waData = $whatsappService->generateMessage($transaksi);
 
-        // 📲 Kirim ulang pesan via Fonnte
-        $response = Http::withHeaders([
-            'Authorization' => config('services.fonnte.token'), // jangan pakai env() langsung
-        ])->post('https://api.fonnte.com/send', [
-            'target' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
-            'message' => $waData['message'],
-            'countryCode' => '62',
-        ]);
+        try {
+            // 📲 Kirim ulang pesan via Node.js WA Gateway dengan token
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.wagateway.token'),
+            ])->post(config('services.wagateway.url') . '/api/wa/send', [
+                'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+                'message' => $waData['message'],
+            ]);
 
-        $fonnteResponse = $response->json();
+            $waResponse = $response->json();
 
-        // 🔖 Buat pesan singkat untuk notifikasi Swal
-        $pesan = "Pesan ke {$transaksi->warga->nama_kk} berhasil dikirim ulang.";
+            if (!empty($waResponse['success'])) {
+                $pesan = "Pesan ke {$transaksi->warga->nama_kk} berhasil dikirim ulang.";
+            } else {
+                $errorMsg = $waResponse['error'] ?? 'Unknown';
+                $pesan = "Gagal mengirim pesan ke {$transaksi->warga->nama_kk}. Error: $errorMsg";
+
+                // 💡 Log error meskipun bukan exception
+                Log::error('WA Gateway Response Error', [
+                    'transaksi_id' => $transaksi->id,
+                    'number' => $transaksi->warga->no_telp,
+                    'response' => $waResponse,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // 🛑 Tangani error koneksi / request
+            $pesan = "Gagal mengirim pesan ke {$transaksi->warga->nama_kk}. Exception: " . $e->getMessage();
+            Log::error('WA Gateway Error: ' . $e->getMessage(), [
+                'transaksi_id' => $transaksi->id,
+                'number' => $transaksi->warga->no_telp,
+            ]);
+        }
 
         return redirect()->route('transaksi.jimpitan.index')
             ->with('jimpitan_success', $pesan);
     }
+
+
+
+
 
 
 
