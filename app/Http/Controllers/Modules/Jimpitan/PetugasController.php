@@ -153,18 +153,21 @@ class PetugasController extends Controller
             $whatsappService = new \App\Services\Jimpitan\WhatsappService();
             $waData = $whatsappService->generateMessage($transaksi);
 
-            // Simpan ke tabel queue, delay 3 menit
+            // 2️⃣ Ambil scheduled terakhir dan tambah 1 detik agar unik
+            $lastScheduled = WaQueue::latest('scheduled_at')->value('scheduled_at') ?? now();
+            $scheduledAt = $lastScheduled->addSecond();
+
+            // Simpan ke tabel queue
             $waQueue = WaQueue::create([
                 'transaksi_id' => $transaksi->id,
                 'warga_id'    => $transaksi->warga_id,
                 'message'     => $waData['message'],
                 'status'      => 'pending',
-                'scheduled_at' => now()->addMinutes(3),
+                'scheduled_at' => $scheduledAt,
             ]);
 
-            // Dispatch job ke queue
+            // Dispatch job ke queue dengan delay sesuai scheduled_at
             ProcessWaQueue::dispatch($waQueue)->delay($waQueue->scheduled_at);
-
 
             return redirect()->route('petugas.home')
                 ->with('jimpitan_success', [
@@ -175,6 +178,7 @@ class PetugasController extends Controller
                 ]);
         });
     }
+
 
 
 
