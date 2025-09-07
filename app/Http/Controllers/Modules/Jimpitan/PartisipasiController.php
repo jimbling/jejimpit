@@ -147,7 +147,7 @@ class PartisipasiController extends Controller
         $pesan .= "\nTotal: Rp " . number_format($total, 0, ',', '.') . "\n\n";
         $pesan .= "Anda dapat mengecek seluruh data transaksi jimpitan di:\n";
         $pesan .= "*https://jimpitan.remaked.web.id*\n\n";
-        $pesan .= "Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, tidak perlu membalasnya. Terima kasih";
+        $pesan .= "> Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, tidak perlu membalasnya. Terima kasih";
 
         $success = false;
         $feedback = '';

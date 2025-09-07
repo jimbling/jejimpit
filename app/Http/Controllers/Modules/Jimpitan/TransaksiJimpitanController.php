@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Modules\Jimpitan;
 
 use App\Models\Warga;
+use App\Models\WaQueue;
+use App\Jobs\ProcessWaQueue;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -81,10 +84,34 @@ class TransaksiJimpitanController extends Controller
             'keterangan' => 'nullable|string|max:255',
         ]);
 
-        TransaksiJimpitan::create($validated);
+        return DB::transaction(function () use ($validated) {
+            // Simpan transaksi jimpitan
+            $transaksi = TransaksiJimpitan::create($validated);
 
-        return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan.');
+            // Generate pesan WA
+            $whatsappService = new WhatsappService();
+            $waData = $whatsappService->generateMessage($transaksi);
+
+            // Ambil scheduled terakhir, tambah 1 detik supaya unik
+            $lastScheduled = WaQueue::latest('scheduled_at')->value('scheduled_at') ?? now();
+            $scheduledAt = $lastScheduled->addSecond();
+
+            // Simpan ke tabel queue
+            $waQueue = WaQueue::create([
+                'transaksi_id' => $transaksi->id,
+                'warga_id'    => $transaksi->warga_id,
+                'message'     => $waData['message'],
+                'status'      => 'pending',
+                'scheduled_at' => $scheduledAt,
+            ]);
+
+            // Kirim ke job queue
+            ProcessWaQueue::dispatch($waQueue)->delay($waQueue->scheduled_at);
+
+            return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan & WA masuk antrian.');
+        });
     }
+
 
     public function resendWhatsapp($id, WhatsappService $wa)
     {
