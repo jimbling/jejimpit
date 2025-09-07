@@ -151,6 +151,9 @@
         });
 
         document.getElementById('btnSendWa').addEventListener('click', function() {
+            const btn = this;
+            const originalHtml = btn.innerHTML;
+
             const daterange = document.getElementById('daterange').value;
             let start = '',
                 end = '';
@@ -162,7 +165,42 @@
             const wargaId = "{{ $warga->id ?? '' }}";
             const url = `{{ url('/laporan/partisipasi') }}/${wargaId}/send-wa?start=${start}&end=${end}`;
 
-            window.open(url, '_blank'); // langsung buka wa.me
+            // Ubah tombol jadi loading
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Mengirim...`;
+
+            fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: data.success ? 'success' : 'error',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Terjadi kesalahan: ' + error,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                });
         });
     </script>
 @endpush

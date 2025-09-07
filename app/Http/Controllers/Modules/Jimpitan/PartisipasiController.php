@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Modules\Jimpitan;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use App\Services\Jimpitan\WhatsappService;
 use App\Services\Jimpitan\PartisipasiService;
 
@@ -107,43 +110,85 @@ class PartisipasiController extends Controller
         ]);
     }
 
-    public function sendWa($id)
+
+
+    public function sendWa($id, WhatsappService $whatsappService, Request $request)
     {
-        $start = request()->query('start');
-        $end   = request()->query('end');
+        $start = $request->query('start');
+        $end   = $request->query('end');
 
         $warga = $this->partisipasiService->getDetailWargaWithFilter($id, $start, $end);
 
+        // Ambil transaksi sesuai filter
         $transaksi = $warga->transaksiJimpitan()
-            ->when($start && $end, function ($query) use ($start, $end) {
-                $query->whereBetween('tanggal', [$start, $end]);
-            })
+            ->when($start && $end, fn($query) => $query->whereBetween('tanggal', [$start, $end]))
             ->orderBy('tanggal', 'asc')
             ->get();
 
+        if ($transaksi->isEmpty()) {
+            $msg = "Gagal: Tidak ada transaksi ditemukan untuk periode $start s/d $end";
+            return $request->ajax()
+                ? response()->json(['success' => false, 'message' => $msg], 404)
+                : back()->with('jimpitan_success', $msg);
+        }
+
         $total = $transaksi->sum('jumlah');
 
-        $pesan = "*LAPORAN PARTISIPASI JIMPITAN 63* \n"
+        // rakit pesan
+        $pesan = "*LAPORAN PARTISIPASI JIMPITAN 63*\n"
             . "Nama: {$warga->nama_kk}\n"
             . "Periode: {$start} s/d {$end}\n\n";
 
         foreach ($transaksi as $trx) {
-            $tanggal = \Carbon\Carbon::parse($trx->tanggal)->translatedFormat('d F Y');
+            $tanggal = Carbon::parse($trx->tanggal)->translatedFormat('d F Y');
             $pesan .= "- {$tanggal} : Rp " . number_format($trx->jumlah, 0, ',', '.') . "\n";
         }
 
-        $totalFormatted = number_format($total, 0, ',', '.');
-        $pesan .= "\nTotal: Rp {$totalFormatted}\n\n";
-        // Tambahkan pesan informasi
+        $pesan .= "\nTotal: Rp " . number_format($total, 0, ',', '.') . "\n\n";
         $pesan .= "Anda dapat mengecek seluruh data transaksi jimpitan di:\n";
         $pesan .= "*https://jimpitan.remaked.web.id*\n\n";
-        $pesan .= "Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, "
-            . "tidak perlu membalasnya. Terima kasih";
-        // Format no hp (pastikan di DB sudah 628xx bukan 08xx)
-        $phone = $warga->no_hp;
+        $pesan .= "Ini adalah pesan informasi tentang jimpitan otomatis oleh sistem, tidak perlu membalasnya. Terima kasih";
 
-        $url = "https://wa.me/{$phone}?text=" . urlencode($pesan);
+        $success = false;
+        $feedback = '';
 
-        return redirect($url);
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.wagateway.token'),
+            ])->post(config('services.wagateway.url') . '/api/wa/send', [
+                'number' => preg_replace('/^0/', '62', $warga->no_telp),
+                'message' => $pesan,
+            ]);
+
+            $waResponse = $response->json();
+
+            if (!empty($waResponse['success'])) {
+                $success = true;
+                $feedback = "Pesan laporan jimpitan berhasil dikirim ke {$warga->nama_kk}.";
+            } else {
+                $errorMsg = $waResponse['error'] ?? 'Unknown';
+                $feedback = "Gagal mengirim pesan ke {$warga->nama_kk}. Error: $errorMsg";
+                Log::error('WA Gateway Response Error', [
+                    'warga_id' => $warga->id,
+                    'number' => $warga->no_telp,
+                    'response' => $waResponse,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            $feedback = "Gagal mengirim pesan ke {$warga->nama_kk}. Exception: " . $e->getMessage();
+            Log::error('WA Gateway Error: ' . $e->getMessage(), [
+                'warga_id' => $warga->id,
+                'number' => $warga->no_telp,
+            ]);
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => $success,
+                'message' => $feedback,
+            ], $success ? 200 : 500);
+        }
+
+        return back()->with('jimpitan_success', $feedback);
     }
 }
