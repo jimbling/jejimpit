@@ -17,6 +17,7 @@ class WaQueue extends Model
         'message',
         'status',
         'scheduled_at',
+        'is_scheduled',
     ];
 
     protected $casts = [
