@@ -8,7 +8,7 @@ use App\Models\BkuLengkap;
 use Illuminate\Http\Request;
 use App\Models\PenerimaanBulanan;
 use App\Models\TransaksiJimpitan;
-use App\Models\penerimaanMingguan;
+use App\Models\PenerimaanMingguan;
 use App\Http\Controllers\Controller;
 use App\Models\PengeluaranJimpitan;
 use App\Services\Jimpitan\PenerimaanService;
@@ -54,7 +54,7 @@ class PenerimaanController extends Controller
         $tahun = $request->input('tahun', now()->year);
 
         // Hapus yang belum locked
-        penerimaanMingguan::where('bulan', $bulan)
+        PenerimaanMingguan::where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->where('locked', false)
             ->delete();
@@ -72,7 +72,7 @@ class PenerimaanController extends Controller
 
             $total = TransaksiJimpitan::whereBetween('tanggal', [$start, $end])->sum('jumlah');
 
-            penerimaanMingguan::create([
+            PenerimaanMingguan::create([
                 'minggu' => $minggu,
                 'bulan'  => $bulan,
                 'tahun'  => $tahun,
@@ -136,7 +136,7 @@ class PenerimaanController extends Controller
 
     public function lockMingguan($id)
     {
-        $bku = penerimaanMingguan::findOrFail($id);
+        $bku = PenerimaanMingguan::findOrFail($id);
         $bku->locked = true;
         $bku->save();
 
@@ -154,7 +154,7 @@ class PenerimaanController extends Controller
 
     public function hapusMingguan($id)
     {
-        $bku = penerimaanMingguan::findOrFail($id);
+        $bku = PenerimaanMingguan::findOrFail($id);
 
         if ($bku->locked) {
             return redirect()->back()->with('error', 'Penerimaan Mingguan sudah dikunci, tidak bisa dihapus');
