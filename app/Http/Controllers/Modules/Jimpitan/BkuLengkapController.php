@@ -69,4 +69,23 @@ class BkuLengkapController extends Controller
             ])
             ->with('success', '✅ BKU Lengkap berhasil digenerate!');
     }
+
+    public function hapusBku(Request $request)
+    {
+        // Ambil dari POST (form input hidden)
+        $request->validate([
+            'bulan' => 'required|integer|min:1|max:12',
+            'tahun' => 'required|integer|min:2000|max:2100',
+        ]);
+
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $deleted = BkuLengkap::where('bulan', $bulan)
+            ->where('tahun', $tahun)
+            ->delete();
+
+        return redirect()->route('bku.lengkap.index')
+            ->with('success', "Berhasil menghapus {$deleted} data BKU bulan {$bulan} tahun {$tahun}");
+    }
 }

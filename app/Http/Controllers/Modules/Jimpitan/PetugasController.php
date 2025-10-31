@@ -4,12 +4,19 @@ namespace App\Http\Controllers\Modules\Jimpitan;
 
 use App\Models\Warga;
 use App\Models\Checkin;
+use App\Models\WaQueue;
 use App\Models\Jimpitan;
+use App\Jobs\ProcessWaQueue;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Services\Jimpitan\KehadiranService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Services\Jimpitan\FonnteService;
+use App\Services\Jimpitan\WhatsappService;
+use App\Services\Jimpitan\KehadiranService;
+
 
 class PetugasController extends Controller
 {
@@ -19,12 +26,13 @@ class PetugasController extends Controller
     public function index()
     {
         $petugas = auth()->user();
-        $today = now()->toDateString();
+        $today = now(config('app.timezone'))->toDateString();
 
-        // Cek apakah sudah check-in hari ini
         $sudahCheckin = Checkin::where('user_id', $petugas->id)
             ->whereDate('tanggal', $today)
             ->exists();
+
+
 
         return view('modules.petugas.home', compact('sudahCheckin'));
     }
@@ -42,6 +50,67 @@ class PetugasController extends Controller
     /**
      * Simpan entri jimpitan baru
      */
+    // public function store(Request $request, WhatsappService $whatsappService)
+    // {
+    //     $request->validate([
+    //         'warga_id' => 'required|exists:warga,id',
+    //         'tanggal' => 'required|date',
+    //         'jumlah' => 'required|numeric|min:1',
+    //         'keterangan' => 'nullable|string|max:255',
+    //     ]);
+
+    //     $userId = auth()->id();
+    //     $tanggal = $request->tanggal;
+
+    //     return DB::transaction(function () use ($request, $whatsappService, $userId, $tanggal) {
+    //         // 🔒 Lock baris checkin untuk user & tanggal ini
+    //         $checkin = Checkin::where('user_id', $userId)
+    //             ->whereDate('tanggal', $tanggal)
+    //             ->lockForUpdate()
+    //             ->first();
+
+    //         if (!$checkin) {
+    //             throw new \Exception('Anda belum melakukan check-in hari ini.');
+    //         }
+
+    //         // Buat transaksi
+    //         $transaksi = TransaksiJimpitan::create([
+    //             'user_id' => $userId,
+    //             'warga_id' => $request->warga_id,
+    //             'tanggal' => $tanggal,
+    //             'jumlah' => $request->jumlah,
+    //             'keterangan' => $request->keterangan,
+    //         ]);
+
+    //         // Hitung ulang jumlah transaksi
+    //         $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
+    //             ->whereDate('tanggal', $tanggal)
+    //             ->count();
+    //         $checkin->save();
+
+    //         // Generate pesan WA
+    //         $waData = $whatsappService->generateMessage($transaksi);
+
+    //         // 📲 Kirim WA via WA Gateway dengan token statis
+    //         $response = Http::withHeaders([
+    //             'Authorization' => 'Bearer ' . config('services.wagateway.token'), // token statis dari env
+    //         ])->post(config('services.wagateway.url') . '/api/wa/send', [
+    //             'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+    //             'message' => $waData['message'],
+    //         ]);
+
+    //         $waData['gateway_response'] = $response->json();
+
+    //         return redirect()->route('petugas.home')
+    //             ->with('jimpitan_success', [
+    //                 'warga' => $transaksi->warga->nama_kk,
+    //                 'jumlah' => $transaksi->jumlah,
+    //                 'tanggal' => $transaksi->tanggal->format('d-m-Y'),
+    //                 'wa_response' => $waData['gateway_response'],
+    //             ]);
+    //     });
+    // }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -54,40 +123,66 @@ class PetugasController extends Controller
         $userId = auth()->id();
         $tanggal = $request->tanggal;
 
-        // Cek check-in
-        $checkin = Checkin::where('user_id', $userId)
-            ->whereDate('tanggal', $tanggal)
-            ->first();
+        return DB::transaction(function () use ($request, $userId, $tanggal) {
+            // Lock checkin
+            $checkin = Checkin::where('user_id', $userId)
+                ->whereDate('tanggal', $tanggal)
+                ->lockForUpdate()
+                ->first();
 
-        if (!$checkin) {
-            return redirect()->back()->withErrors(['Anda belum melakukan check-in hari ini.']);
-        }
+            if (!$checkin) {
+                throw new \Exception('Anda belum melakukan check-in hari ini.');
+            }
 
-        // Simpan transaksi
-        $transaksi = TransaksiJimpitan::create([
-            'user_id' => $userId,
-            'warga_id' => $request->warga_id,
-            'tanggal' => $tanggal,
-            'jumlah' => $request->jumlah,
-            'keterangan' => $request->keterangan,
-        ]);
-
-        // Update jumlah transaksi di Checkin
-        $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
-            ->whereDate('tanggal', $tanggal)
-            ->count();
-        $checkin->save();
-
-        // Ambil nama warga
-        $warga = Warga::find($request->warga_id);
-
-        return redirect()->route('petugas.home')
-            ->with('jimpitan_success', [
-                'warga' => $warga->nama_kk,
+            // Buat transaksi
+            $transaksi = TransaksiJimpitan::create([
+                'user_id' => $userId,
+                'warga_id' => $request->warga_id,
                 'tanggal' => $tanggal,
                 'jumlah' => $request->jumlah,
+                'keterangan' => $request->keterangan,
             ]);
+
+            // Hitung ulang jumlah transaksi
+            $checkin->jumlah_transaksi = TransaksiJimpitan::where('user_id', $userId)
+                ->whereDate('tanggal', $tanggal)
+                ->count();
+            $checkin->save();
+
+            // 1️⃣ Generate pesan WA
+            $whatsappService = new \App\Services\Jimpitan\WhatsappService();
+            $waData = $whatsappService->generateMessage($transaksi);
+
+            // 2️⃣ Ambil scheduled terakhir dan tambah 1 detik agar unik
+            $lastScheduled = WaQueue::latest('scheduled_at')->value('scheduled_at') ?? now();
+            $scheduledAt = $lastScheduled->addSecond();
+
+            // Simpan ke tabel queue
+            $waQueue = WaQueue::create([
+                'transaksi_id' => $transaksi->id,
+                'warga_id'    => $transaksi->warga_id,
+                'message'     => $waData['message'],
+                'status'      => 'pending',
+                'scheduled_at' => $scheduledAt,
+            ]);
+
+            // Dispatch job ke queue dengan delay sesuai scheduled_at
+            ProcessWaQueue::dispatch($waQueue)->delay($waQueue->scheduled_at);
+
+            return redirect()->route('petugas.home')
+                ->with('jimpitan_success', [
+                    'warga' => $transaksi->warga->nama_kk,
+                    'jumlah' => $transaksi->jumlah,
+                    'tanggal' => $transaksi->tanggal->format('d-m-Y'),
+                    'wa_response' => null, // belum dikirim
+                ]);
+        });
     }
+
+
+
+
+
 
     public function riwayat()
     {

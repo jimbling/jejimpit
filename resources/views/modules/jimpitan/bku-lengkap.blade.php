@@ -78,8 +78,9 @@
                             @endfor
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
+                    <div class="col-md-4 d-flex gap-2">
+                        <!-- Tombol Tampilkan -->
+                        <button type="submit" class="btn btn-primary flex-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -94,7 +95,26 @@
                                 <path d="M18.5 19.5l2.5 2.5" />
                             </svg> Tampilkan
                         </button>
+
+                        <!-- Tombol Hapus -->
+
+                        <button type="button" class="btn btn-danger w-100 btn-hapus-bku"
+                            data-bulan="{{ request('bulan') }}" data-tahun="{{ request('tahun') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 7l16 0" />
+                                <path d="M10 11l0 6" />
+                                <path d="M14 11l0 6" />
+                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                            </svg> Hapus
+                        </button>
                     </div>
+
+
+
                 </form>
             </div>
 
@@ -110,6 +130,16 @@
 
 
     </div>
+
+    {{-- Modal Konfirmasi Hapus --}}
+    <x-modal.konfirmasi id="modalKonfirmasiHapus" title="Hapus Data Terpilih?"
+        body="Data yang dipilih akan dihapus permanen. Tindakan ini tidak dapat dibatalkan." btnLabel="Ya, Hapus"
+        btnColor="danger" :formAction="''" {{-- formAction dikosongkan, nanti diisi JS --}} method="DELETE" />
+    {{-- Modal Peringatan Tidak Ada Data --}}
+    <x-modal.peringatan id="modalPeringatanTidakAdaData" title="Tidak Ada Data Dipilih"
+        message="Silakan pilih setidaknya satu data untuk dihapus." btnLabel="Tutup" btnColor="warning" formAction="#"
+        method="GET" />
+
 
     @push('scripts')
         <script>
@@ -136,6 +166,56 @@
                     el.addEventListener("change", fetchData);
                 });
                 form.querySelector("input[name=q]").addEventListener("keyup", _.debounce(fetchData, 500));
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const hapusBtns = document.querySelectorAll('.btn-hapus-bku');
+
+                hapusBtns.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const filterForm = document.getElementById('filterForm');
+                        const bulan = filterForm.querySelector('select[name="bulan"]').value;
+                        const tahun = filterForm.querySelector('select[name="tahun"]').value;
+
+                        if (!bulan || !tahun) {
+                            const warningModal = new bootstrap.Modal(document.getElementById(
+                                'modalPeringatanTidakAdaData'));
+                            warningModal.show();
+                            return;
+                        }
+
+
+
+                        const modal = document.getElementById('modalKonfirmasiHapus');
+                        const form = modal.querySelector('form');
+
+                        // Set action
+                        form.action = `/bku/hapus`;
+
+                        // Hapus input lama
+                        form.querySelectorAll('input[name="bulan"], input[name="tahun"]').forEach(e => e
+                            .remove());
+
+                        // Tambahkan input hidden terbaru
+                        const inputBulan = document.createElement('input');
+                        inputBulan.type = 'hidden';
+                        inputBulan.name = 'bulan';
+                        inputBulan.value = bulan;
+                        form.appendChild(inputBulan);
+
+                        const inputTahun = document.createElement('input');
+                        inputTahun.type = 'hidden';
+                        inputTahun.name = 'tahun';
+                        inputTahun.value = tahun;
+                        form.appendChild(inputTahun);
+
+                        // Tampilkan modal
+                        const konfirmasiModal = new bootstrap.Modal(modal);
+                        konfirmasiModal.show();
+                    });
+                });
             });
         </script>
     @endpush

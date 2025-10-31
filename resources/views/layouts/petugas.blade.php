@@ -17,7 +17,7 @@
 
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -25,6 +25,14 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+    @if (system_setting('favicon'))
+        <link rel="icon" href="{{ asset('storage/' . system_setting('favicon')) }}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ asset('storage/' . system_setting('favicon')) }}" type="image/x-icon">
+    @else
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    @endif
+
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -32,20 +40,28 @@
     <div id="toast-container" class="fixed top-5 right-5 flex flex-col gap-3 z-50"></div>
 
     <!-- Header -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold">Selamat Datang</h1>
-                <p class="text-sm">{{ Auth::user()->name }}</p>
+    <header class="bg-blue-200 text-gray-800 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center flex-wrap">
+            <!-- Logo Kiri -->
+            <div class="flex items-center gap-4">
+                @if (system_setting('logo'))
+                    <img src="{{ asset('storage/' . system_setting('logo')) }}" alt="Logo"
+                        class="h-12 w-auto object-contain">
+                @endif
+
+                @if (system_setting('kop_sekolah'))
+                    <img src="{{ asset('storage/' . system_setting('kop_sekolah')) }}" alt="Kop Sekolah"
+                        class="h-12 w-auto object-contain">
+                @endif
             </div>
+
+            <!-- User Menu Kanan -->
             <div class="relative">
-                <!-- Icon User -->
                 <button id="userMenuBtn"
                     class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center focus:outline-none">
                     <i class="fas fa-user"></i>
                 </button>
 
-                <!-- Dropdown Menu -->
                 <div id="userDropdown"
                     class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg py-2 hidden z-50">
                     <form method="POST" action="{{ route('logout') }}">
@@ -60,6 +76,8 @@
             </div>
         </div>
     </header>
+
+
 
     <!-- Main Content -->
     <main class="container mx-auto p-4 mb-20">
@@ -149,7 +167,8 @@
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             <path
                                 d="M12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
                         </svg>
                     </div>
                     <span class="nav-label text-xs font-medium">Profil</span>

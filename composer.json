@@ -15,6 +15,7 @@
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^8.2",
         "ramsey/uuid": "^4.7",
+        "spatie/laravel-backup": "^9.3",
         "spatie/laravel-permission": "^6.16"
     },
     "require-dev": {

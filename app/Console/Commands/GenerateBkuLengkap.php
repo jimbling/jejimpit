@@ -48,12 +48,13 @@ class GenerateBkuLengkap extends Command
         ]);
 
         // 2. Ambil penerimaan
-        $penerimaan = TransaksiJimpitan::whereMonth('tanggal', $bulan)
+        $penerimaan = TransaksiJimpitan::with('warga') // pastikan relasi dipanggil
+            ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->get()
             ->map(fn($t) => [
                 'tanggal' => $t->tanggal,
-                'uraian' => $t->keterangan ?? 'Penerimaan Jimpitan',
+                'uraian' => 'Penerimaan Jimpitan - ' . ($t->warga->nama_kk ?? 'Tidak diketahui'),
                 'dana_masuk' => $t->jumlah,
                 'dana_keluar' => 0,
             ]);

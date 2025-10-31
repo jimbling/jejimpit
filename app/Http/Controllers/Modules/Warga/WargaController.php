@@ -97,14 +97,6 @@ class WargaController extends Controller
 
 
 
-
-
-
-
-
-
-
-
     public function exportSingle($id)
     {
         $warga = Warga::findOrFail($id);

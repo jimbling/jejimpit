@@ -34,5 +34,12 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'fonnte' => [
+        'token' => env('FONNTE_TOKEN'),
+    ],
+    'wagateway' => [
+        'url' => env('WAGATEWAY_URL'),
+        'token' => env('WAGATEWAY_TOKEN'),
+    ],
 
 ];

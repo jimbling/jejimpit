@@ -31,6 +31,7 @@ class PermissionSeeder extends Seeder
             ['atur bku', 'Administrator'],
             ['atur penerimaan', 'Administrator'],
             ['atur pengeluaran', 'Administrator'],
+            ['atur laporan', 'Administrator'],
 
 
 

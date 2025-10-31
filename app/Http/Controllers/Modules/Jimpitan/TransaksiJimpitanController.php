@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers\Modules\Jimpitan;
 
+use App\Models\Warga;
+use App\Models\WaQueue;
+use App\Jobs\ProcessWaQueue;
 use Illuminate\Http\Request;
 use App\Models\TransaksiJimpitan;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use App\Services\Jimpitan\WhatsappService;
 use App\Services\Jimpitan\TransaksiService;
 
 class TransaksiJimpitanController extends Controller
@@ -42,17 +49,25 @@ class TransaksiJimpitanController extends Controller
 
         $transaksi = $query->get();
 
-
         // Jika request AJAX, kirim partial table saja
         if ($request->ajax()) {
-            return view('modules.jimpitan.transaksi.table', compact('transaksi'))->render();
+            return view('modules.jimpitan.transaksi.table', [
+                'transaksi' => $transaksi,
+            ])->render();
         }
 
         $wargas = \App\Models\Warga::where('status', 'aktif')->orderBy('nama_kk')->get();
         $users  = \App\Models\User::orderBy('name')->get();
 
-        return view('modules.jimpitan.transaksi', compact('transaksi', 'wargas', 'users'));
+        return view('modules.jimpitan.transaksi', [
+            'title'       => 'Data Transaksi Jimpitan',
+            'transaksi'   => $transaksi,
+            'wargas'      => $wargas,
+            'users'       => $users,
+            'breadcrumbs' => $this->transaksiService->getBreadcrumbs(),
+        ]);
     }
+
 
 
 
@@ -69,10 +84,95 @@ class TransaksiJimpitanController extends Controller
             'keterangan' => 'nullable|string|max:255',
         ]);
 
-        TransaksiJimpitan::create($validated);
+        return DB::transaction(function () use ($validated) {
+            // Simpan transaksi jimpitan
+            $transaksi = TransaksiJimpitan::create($validated);
 
-        return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan.');
+            // Generate pesan WA
+            $whatsappService = new WhatsappService();
+            $waData = $whatsappService->generateMessage($transaksi);
+
+            // Ambil scheduled terakhir, tambah 1 detik supaya unik
+            $lastScheduled = WaQueue::latest('scheduled_at')->value('scheduled_at') ?? now();
+            $scheduledAt = $lastScheduled->addSecond();
+
+            // Simpan ke tabel queue
+            $waQueue = WaQueue::create([
+                'transaksi_id' => $transaksi->id,
+                'warga_id'    => $transaksi->warga_id,
+                'message'     => $waData['message'],
+                'status'      => 'pending',
+                'scheduled_at' => $scheduledAt,
+            ]);
+
+            // Kirim ke job queue
+            ProcessWaQueue::dispatch($waQueue)->delay($waQueue->scheduled_at);
+
+            return redirect()->back()->with('success', 'Transaksi jimpitan berhasil ditambahkan & WA masuk antrian.');
+        });
     }
+
+
+    public function resendWhatsapp($id, WhatsappService $wa)
+    {
+        $transaksi = TransaksiJimpitan::with(['warga', 'user'])->findOrFail($id);
+
+        $waData = $wa->generateMessage($transaksi);
+
+        // Langsung buka halaman wa.me
+        return redirect()->away($waData['wa_url']);
+    }
+
+    public function resendWhatsappJiget($id, WhatsappService $whatsappService)
+    {
+        $transaksi = TransaksiJimpitan::with(['warga', 'user'])->findOrFail($id);
+
+        // 🔄 Generate pesan WA
+        $waData = $whatsappService->generateMessage($transaksi);
+
+        try {
+            // 📲 Kirim ulang pesan via Node.js WA Gateway dengan token
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.wagateway.token'),
+            ])->post(config('services.wagateway.url') . '/api/wa/send', [
+                'number' => preg_replace('/^0/', '62', $transaksi->warga->no_telp),
+                'message' => $waData['message'],
+            ]);
+
+            $waResponse = $response->json();
+
+            if (!empty($waResponse['success'])) {
+                $pesan = "Pesan ke {$transaksi->warga->nama_kk} berhasil dikirim ulang.";
+            } else {
+                $errorMsg = $waResponse['error'] ?? 'Unknown';
+                $pesan = "Gagal mengirim pesan ke {$transaksi->warga->nama_kk}. Error: $errorMsg";
+
+                // 💡 Log error meskipun bukan exception
+                Log::error('WA Gateway Response Error', [
+                    'transaksi_id' => $transaksi->id,
+                    'number' => $transaksi->warga->no_telp,
+                    'response' => $waResponse,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // 🛑 Tangani error koneksi / request
+            $pesan = "Gagal mengirim pesan ke {$transaksi->warga->nama_kk}. Exception: " . $e->getMessage();
+            Log::error('WA Gateway Error: ' . $e->getMessage(), [
+                'transaksi_id' => $transaksi->id,
+                'number' => $transaksi->warga->no_telp,
+            ]);
+        }
+
+        return redirect()->route('transaksi.jimpitan.index')
+            ->with('jimpitan_success', $pesan);
+    }
+
+
+
+
+
+
+
 
 
     /**

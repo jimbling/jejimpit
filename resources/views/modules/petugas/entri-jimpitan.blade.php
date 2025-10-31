@@ -394,6 +394,23 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[action="{{ route('petugas.jimpitan.store') }}"]');
+
+            form.addEventListener('submit', function(e) {
+                // Tampilkan Swal loading
+                Swal.fire({
+                    title: 'Mengirim data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+            });
+        });
+    </script>
 
     <style>
         /* Animasi untuk toast */
