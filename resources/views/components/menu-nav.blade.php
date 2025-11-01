@@ -7,7 +7,7 @@
             class="navbar-brand navbar-brand-autodark d-flex align-items-center justify-content-center position-relative">
             <a href="." class="mx-auto">
                 <!-- Logo SVG -->
-                <img src="https://jimpitan.sinaucms.web.id/illustrasi/sregep2.png" alt="Hero illustration"
+                <img src="https://jimpitan.remaked.web.id/illustrasi/sregep2.png" alt="Hero illustration"
                     class="img-fluid">
             </a>
 

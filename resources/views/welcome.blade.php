@@ -199,7 +199,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 ">
-                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/jimpitan.png" alt="Hero illustration"
+                    <img src="https://jimpitan.remaked.web.id/illustrasi/jimpitan.png" alt="Hero illustration"
                         class="img-fluid">
                 </div>
             </div>
@@ -559,7 +559,7 @@
 
                 </div>
                 <div class="col-lg-6 ">
-                    <img src="https://jimpitan.sinaucms.web.id/illustrasi/royong.png" alt="Community illustration"
+                    <img src="https://jimpitan.remaked.web.id/illustrasi/royong.png" alt="Community illustration"
                         class="img-fluid">
                 </div>
             </div>

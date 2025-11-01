@@ -518,8 +518,11 @@
                         method: 'POST', // Tetap pakai POST
                         body: formData,
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
+                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        
+                        credentials: "same-origin"
                     })
                     .then(response => {
                         if (!response.ok) {

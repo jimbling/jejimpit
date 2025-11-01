@@ -6,7 +6,7 @@
             aria-controls="offcanvasMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <img src="https://jimpitan.sinaucms.web.id/illustrasi/sregep2.png" alt="Hero illustration" class="img-fluid">
+        <img src="https://jimpitan.remaked.web.id/illustrasi/sregep2.png" alt="Hero illustration" class="img-fluid">
 
         <div class="navbar-nav flex-row order-md-last">
 
